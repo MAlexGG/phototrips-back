@@ -80,4 +80,20 @@ class CardTest extends TestCase
         $response->assertOk()
             ->assertSee($card->title);
     }
+
+    public function testIfCanSearchACard()
+    {
+        $this->withExceptionHandling();
+
+        $card = Card::factory()->create([
+            'title' => 'bali',
+            'image' => 'bali.jpg',
+            'description' => 'Lorem ipsum'
+        ]);
+
+        $response = $this->get('/api/search/bali');
+        $data = ['title' => $card->title];
+
+        $response->assertJsonFragment($data);
+    }
 }
