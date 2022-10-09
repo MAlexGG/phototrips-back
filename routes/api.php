@@ -25,3 +25,5 @@ Route::post('/photos', [CardController::class, 'store']);
 Route::get('/photos/{id}', [CardController::class, 'show']);
 Route::post('/photos/{id}', [CardController::class, 'update']);
 Route::delete('/photos/{id}', [CardController::class, 'destroy']);
+
+Route::get('/search/{search}', [CardController::class, 'search']);

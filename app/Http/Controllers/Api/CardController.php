@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Card;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 
 class CardController extends Controller
@@ -108,5 +109,12 @@ class CardController extends Controller
         $card->delete();
         $destination = public_path("storage\\" . $card->image);
         File::delete($destination);
+    }
+
+    public function search($request)
+    {
+        $cards = Card::searchByTitle($request);
+
+        return response()->json($cards, 200);
     }
 }

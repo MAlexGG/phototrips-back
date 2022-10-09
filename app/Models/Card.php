@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Card extends Model
 {
@@ -19,4 +21,11 @@ class Card extends Model
         'created_at',
         'updated_at'
     ];
+
+    static function searchByTitle($title)
+    {
+        $cards = DB::table('cards')->where('title', 'LIKE', "%$title%")->get();
+
+        return $cards;
+    }
 }
