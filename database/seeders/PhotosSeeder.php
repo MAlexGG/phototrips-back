@@ -13,6 +13,7 @@ class PhotosSeeder extends Seeder
     public function run(): void
     {
         DB::table('photos')->insert([
+            'id' => 1,
             'name' => 'El Santuario flotante',
             'description' => 'Lorem ipsum',
             'image' => 'https://upload.wikimedia.org/wikipedia/commons/5/55/20131012_07_Miyajima_-_Torii_%2810491662566%29.jpg',
@@ -21,6 +22,7 @@ class PhotosSeeder extends Seeder
         ]);
 
         DB::table('photos')->insert([
+            'id' => 2,
             'name' => 'Isla Bartolomé',
             'description' => 'Lorem ipsum',
             'image' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Bartoleme_Island.jpg/260px-Bartoleme_Island.jpg',
