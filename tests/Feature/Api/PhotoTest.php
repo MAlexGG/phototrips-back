@@ -91,7 +91,6 @@ class PhotoTest extends TestCase
             "id" => 1
         ]);
         Auth::login($user);
-
         Photo::factory()->create([
             "id" => 1,
             "user_id" => $user->id
@@ -100,6 +99,49 @@ class PhotoTest extends TestCase
         $response = $this->getJson('/api/photos/2');
 
         $response->assertJsonCount(0);
+    }
+
+    public function test_auth_user_can_delete_a_photo()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = User::factory()->create([
+            "id" => 1
+        ]);
+        Auth::login($user);
+        Photo::factory()->create([
+            "id" => 1,
+            "user_id" => $user->id
+        ]);
+
+        $response = $this->deleteJson('/api/photos/1');
+
+        $response->assertStatus(200);
+        $this->assertCount(0, Photo::all());
+    }
+
+    public function test_auth_user_cannot_delete_a_photo_of_somebody_else()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user1 = User::factory()->create();
+        Auth::login($user1);
+        Photo::factory()->create([
+            "id" => 1,
+            "user_id" => $user1->id
+        ]);
+        Auth::logout($user1);
+
+        $user2 = User::factory()->create();
+        Auth::login($user2);
+        Photo::factory()->create([
+            "id" => 2,
+            "user_id" => $user2->id
+        ]);
+
+        $this->deleteJson('/api/photos/1');
+
+        $this->assertCount(2, Photo::all());
     }
 
 }

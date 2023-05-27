@@ -28,5 +28,6 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/photos', [PhotoController::class, 'index']);
     Route::post('/photos', [PhotoController::class, 'store']);
     Route::get('/photos/{id}', [PhotoController::class, 'show']);
+    Route::delete('/photos/{id}', [PhotoController::class, 'destroy']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });

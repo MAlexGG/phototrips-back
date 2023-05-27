@@ -6,6 +6,7 @@ use App\Models\Photo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class PhotoController extends Controller
 {
@@ -67,6 +68,17 @@ class PhotoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $photo = Photo::findPhotoByAuthUser($id);
+
+        if($photo == null){
+            return response()->json([
+                "msg" => "No tienes una fotografía con ese identificador"
+            ], 200);
+        } 
+        
+        $photo->delete();
+        return response()->json([
+            "msg" => "La fotografía se ha borrado correctamente"
+        ], 200);
     }
 }
