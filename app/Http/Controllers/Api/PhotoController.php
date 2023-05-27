@@ -50,7 +50,8 @@ class PhotoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $photo = Photo::find($id);
+        return response()->json($photo, 200);
     }
 
     /**

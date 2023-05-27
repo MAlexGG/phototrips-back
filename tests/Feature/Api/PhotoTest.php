@@ -3,10 +3,11 @@
 namespace Tests\Feature\Api;
 
 use Tests\TestCase;
-use App\Models\Photo;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Photo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PhotoTest extends TestCase
 {
@@ -27,11 +28,12 @@ class PhotoTest extends TestCase
             "user_id" => $user->id
         ]);
 
-        $response = $this->get('/api/photos');
+        $response = $this->getJson('/api/photos');
 
         $response->assertStatus(200)
         ->assertJsonCount(1);
     }
+
     public function test_auth_user_can_create_a_photo(): void
     {
         $this->withoutExceptionHandling();
@@ -39,7 +41,7 @@ class PhotoTest extends TestCase
         $user = User::factory()->create();
         Auth::login($user);
 
-        $response = $this->post('/api/photos', [
+        $response = $this->postJson('/api/photos', [
             "name" => "Oporto",
             "description" => "Lorem ipsum",
             "image" => "http://ejemplo.com/1.png",
@@ -51,5 +53,27 @@ class PhotoTest extends TestCase
         $response->assertStatus(201)
         ->assertJsonFragment(["msg" => "La fotografía se ha creado correctamente"]);
         $this->assertEquals($photo->name, "Oporto");   
+    }
+
+    public function test_auth_user_can_see_a_photo()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Photo::factory()->create([
+            "id" => 1
+        ]);
+
+        $response = $this->getJson('/api/photos/1');
+
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->where('id', 1)
+            ->etc()
+        );
+
+
+        
     }
 }

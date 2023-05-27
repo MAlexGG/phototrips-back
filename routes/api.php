@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PhotoController;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,5 +27,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/photos', [PhotoController::class, 'index']);
     Route::post('/photos', [PhotoController::class, 'store']);
+    Route::get('/photos/{id}', [PhotoController::class, 'show']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
