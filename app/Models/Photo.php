@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Photo extends Model
 {
@@ -24,6 +25,18 @@ class Photo extends Model
     public function users()
     {
         return $this->belongsTo(User::class);
+    }
+
+    static function findPhotosByAuthUser()
+    {
+        $photos = Photo::where('user_id', Auth::user()->id)->get();
+        return $photos;
+    } 
+
+    static function findPhotoByAuthUser($id)
+    {
+        $photo = Photo::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        return $photo;
     }
 
 }

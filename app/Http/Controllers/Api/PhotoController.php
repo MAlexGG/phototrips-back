@@ -14,7 +14,7 @@ class PhotoController extends Controller
      */
     public function index()
     {
-        $photos = Photo::all();
+        $photos = Photo::findPhotosByAuthUser();
         return response()->json($photos, 200);
     }
 
@@ -50,7 +50,7 @@ class PhotoController extends Controller
      */
     public function show(string $id)
     {
-        $photo = Photo::find($id);
+        $photo = Photo::findPhotoByAuthUser($id);
         return response()->json($photo, 200);
     }
 

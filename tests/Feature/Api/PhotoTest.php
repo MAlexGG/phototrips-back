@@ -17,17 +17,23 @@ class PhotoTest extends TestCase
 
      use RefreshDatabase;
 
-    public function test_auth_user_get_all_photos(): void
+    public function test_auth_user_get_all_owned_photos(): void
     {
         $this->withoutExceptionHandling();
 
-        $user = User::factory()->create();
-        Auth::login($user);
-
+        $user1 = User::factory()->create();
+        Auth::login($user1);
         Photo::factory()->create([
-            "user_id" => $user->id
+            "user_id" => $user1->id
         ]);
+        Auth::logout($user1);
 
+        $user2 = User::factory()->create();
+        Auth::login($user2);
+        Photo::factory()->create([
+            "user_id" => $user2->id
+        ]);
+        
         $response = $this->getJson('/api/photos');
 
         $response->assertStatus(200)
@@ -55,15 +61,18 @@ class PhotoTest extends TestCase
         $this->assertEquals($photo->name, "Oporto");   
     }
 
-    public function test_auth_user_can_see_a_photo()
+    public function test_auth_user_can_see_a_owned_photo()
     {
         $this->withoutExceptionHandling();
         
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            "id" => 1
+        ]);
         Auth::login($user);
 
         Photo::factory()->create([
-            "id" => 1
+            "id" => 1,
+            "user_id" => $user->id
         ]);
 
         $response = $this->getJson('/api/photos/1');
@@ -72,8 +81,25 @@ class PhotoTest extends TestCase
             $json->where('id', 1)
             ->etc()
         );
-
-
-        
     }
+        
+    public function test_auth_user_cannot_see_a_photo_of_somebody_else()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = User::factory()->create([
+            "id" => 1
+        ]);
+        Auth::login($user);
+
+        Photo::factory()->create([
+            "id" => 1,
+            "user_id" => $user->id
+        ]);
+
+        $response = $this->getJson('/api/photos/2');
+
+        $response->assertJsonCount(0);
+    }
+
 }
