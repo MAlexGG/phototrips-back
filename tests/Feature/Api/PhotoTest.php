@@ -98,7 +98,7 @@ class PhotoTest extends TestCase
 
         $response = $this->getJson('/api/photos/2');
 
-        $response->assertJsonCount(0);
+        $response->assertJsonFragment(["msg" => "No tienes una fotografía con ese identificador"]);
     }
 
     public function test_auth_user_can_delete_a_photo()
