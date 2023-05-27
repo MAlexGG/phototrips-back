@@ -38,9 +38,11 @@ class PhotoController extends Controller
         ]);
 
         $photo->save();
-        return response()->json($photo, 201, [
-            "msg" => "Photo has been created successfully"
-        ]);
+
+        return response()->json([
+            "photo" => $photo, 
+            "msg" => "La fotografía se ha creado correctamente"
+        ], 201);
     }
 
     /**

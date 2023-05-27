@@ -49,7 +49,7 @@ class PhotoTest extends TestCase
         $photo = Photo::first();
 
         $response->assertStatus(201)
-        ->assertHeader("msg", "Photo has been created successfully");
-        $this->assertEquals($photo->name, "Oporto");        
+        ->assertJsonFragment(["msg" => "La fotografía se ha creado correctamente"]);
+        $this->assertEquals($photo->name, "Oporto");   
     }
 }
