@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class PhotoController extends Controller
 {
@@ -22,7 +23,24 @@ class PhotoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "name" => "required|max:125",
+            "description" => "required|max:500",
+            "image" => "required|max:500"
+        ]);
+
+        $user = Auth::user();
+        $photo = Photo::create([
+            "name" => $request->name,
+            "description" => $request->description,
+            "image" => $request->image,
+            "user_id" => $user->id
+        ]);
+
+        $photo->save();
+        return response()->json($photo, 201, [
+            "msg" => "Photo has been created successfully"
+        ]);
     }
 
     /**

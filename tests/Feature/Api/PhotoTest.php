@@ -18,19 +18,38 @@ class PhotoTest extends TestCase
 
     public function test_auth_user_get_all_photos(): void
     {
-        $user = User::factory()->create();
+        $this->withoutExceptionHandling();
 
+        $user = User::factory()->create();
         Auth::login($user);
 
         Photo::factory()->create([
             "user_id" => $user->id
         ]);
 
-        Photo::all();
-
         $response = $this->get('/api/photos');
 
         $response->assertStatus(200)
         ->assertJsonCount(1);
+    }
+    public function test_auth_user_can_create_a_photo(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->post('/api/photos', [
+            "name" => "Oporto",
+            "description" => "Lorem ipsum",
+            "image" => "http://ejemplo.com/1.png",
+            "user_id" => $user->id
+        ]);
+
+        $photo = Photo::first();
+
+        $response->assertStatus(201)
+        ->assertHeader("msg", "Photo has been created successfully");
+        $this->assertEquals($photo->name, "Oporto");        
     }
 }

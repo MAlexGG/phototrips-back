@@ -25,6 +25,6 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/photos', [PhotoController::class, 'index']);
-
+    Route::post('/photos', [PhotoController::class, 'store']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
