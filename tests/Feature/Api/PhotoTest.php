@@ -5,7 +5,6 @@ namespace Tests\Feature\Api;
 use Tests\TestCase;
 use App\Models\Photo;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +16,7 @@ class PhotoTest extends TestCase
 
      use RefreshDatabase;
 
-    public function test_get_all_photos(): void
+    public function test_auth_user_get_all_photos(): void
     {
         $user = User::factory()->create();
 
