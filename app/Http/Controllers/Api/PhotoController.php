@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\City;
 use App\Models\Photo;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -26,15 +28,24 @@ class PhotoController extends Controller
         $request->validate([
             "name" => "required|max:125",
             "description" => "required|max:500",
-            "image" => "required|max:500"
+            "image" => "required|max:500",
+            "city" => "required"
         ]);
 
         $user = Auth::user();
+        
+        $city = City::searchByName($request->city);
+
+        if($city == null){
+            return response()->json(["msg" => "Crea una ciudad para tu fotografía"]);
+        }
+
         $photo = Photo::create([
             "name" => $request->name,
             "description" => $request->description,
             "image" => $request->image,
-            "user_id" => $user->id
+            "user_id" => $user->id,
+            "city_id" => $city->id
         ]);
 
         $photo->save();

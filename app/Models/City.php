@@ -28,4 +28,10 @@ class City extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    static function searchByName($name)
+    {
+        $city = City::where('name', $name)->first();
+        return $city;
+    }
 }

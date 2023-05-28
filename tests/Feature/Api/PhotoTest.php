@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api;
 
 use Tests\TestCase;
+use App\Models\City;
 use App\Models\User;
 use App\Models\Photo;
 use Illuminate\Support\Facades\Auth;
@@ -47,18 +48,23 @@ class PhotoTest extends TestCase
         $user = User::factory()->create();
         Auth::login($user);
 
+        City::factory()->create([
+            "name" => "Tokio"
+        ]);
+
         $response = $this->postJson('/api/photos', [
             "name" => "Oporto",
             "description" => "Lorem ipsum",
             "image" => "http://ejemplo.com/1.png",
-            "user_id" => $user->id
+            "user_id" => $user->id,
+            "city" => "Tokio"
         ]);
 
         $photo = Photo::first();
 
         $response->assertStatus(201)
         ->assertJsonFragment(["msg" => "La fotografía se ha creado correctamente"]);
-        $this->assertEquals($photo->name, "Oporto");   
+        $this->assertEquals($photo->name, "Oporto");  
     }
 
     public function test_auth_user_can_see_a_owned_photo()
