@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CityController;
+use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\PhotoController;
 use App\Models\Photo;
 use Illuminate\Http\Request;
@@ -33,6 +34,9 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::get('/cities', [CityController::class, 'index']);
     Route::post('/cities', [CityController::class, 'store']);
+
+    Route::get('/countries', [CountryController::class, 'index']);
+    Route::post('/countries', [CountryController::class, 'store']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

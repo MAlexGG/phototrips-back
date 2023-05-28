@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\City;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Country;
+use App\Models\Continent;
 
-class CityController extends Controller
+class CountryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $cities = City::all();
-        return response()->json($cities, 200);
+        $countries = Country::all();
+        return response()->json($countries, 200);
     }
 
     /**
@@ -25,28 +25,28 @@ class CityController extends Controller
     {
         $request->validate([
             "name" => "required|max:255",
-            "country" => "required"
+            "continent" => "required"
         ]);
 
-        $country = Country::searchByName($request->country);
-        
-        if($country == null){
-            return response()->json(["msg" => "Crea un país para tu fotografía"]);
+        $continent = Continent::searchByName($request->continent);
+
+        if($continent == null){
+            return response()->json(["msg" => "Crea un continente para tu fotografía"]);
         }
 
-        $city = City::create([
+        $country = Country::create([
             "name" => $request->name,
-            "country_id" => $country->id
+            "continent_id" => $continent->id 
         ]);
 
-        $city->save();
+        $country->save();
 
         return response()->json([
-            "city" => $city,
-            "msg" => "La ciudad se ha creado correctamente"
+            "country" => $country,
+            "msg" => "El país se ha creado correctamente"
         ], 201);
 
-        //PONER UN CONDICIONAL PARA QUE NO SE CREEN CIUDADES REPETIDAS
+        //PONER UN CONDICIONAL PARA QUE NO SE CREEN PAISES REPETIDOS
     }
 
     /**

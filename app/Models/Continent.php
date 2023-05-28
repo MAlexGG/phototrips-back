@@ -22,4 +22,10 @@ class Continent extends Model
     {
         return $this->hasMany(Country::class);
     }
+
+    static function searchByName($name)
+    {
+        $continent = Continent::where('name', $name)->first();
+        return $continent;
+    }
 }
