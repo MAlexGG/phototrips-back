@@ -16,15 +16,13 @@ class CitiesSeeder extends Seeder
         DB::table('cities')->insert([
             'id' => 1,
             'name' => 'Tokio',
-            'country_id' => 1,
-            'continent_id' => 3
+            'country_id' => 1
         ]);
 
         DB::table('cities')->insert([
             'id' => 2,
             'name' => 'Puerto Ayora',
-            'country_id' => 2,
-            'continent_id' => 1
+            'country_id' => 2
         ]);
     }
 }

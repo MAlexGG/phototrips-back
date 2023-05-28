@@ -14,7 +14,8 @@ class Photo extends Model
         'name',
         'description',
         'image',
-        'user_id'
+        'user_id',
+        'city_id'
     ];
 
     protected $hidden = [
@@ -25,6 +26,11 @@ class Photo extends Model
     public function users()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function cities()
+    {
+        return $this->belongsTo(City::class);
     }
 
     static function findPhotosByAuthUser()

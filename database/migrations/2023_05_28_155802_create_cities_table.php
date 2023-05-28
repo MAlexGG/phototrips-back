@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedBigInteger('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('countries');
-            $table->unsignedBigInteger('continent_id')->nullable();
-            $table->foreign('continent_id')->references('id')->on('continents');
             $table->timestamps();
         });
     }

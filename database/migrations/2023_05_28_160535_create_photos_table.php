@@ -18,10 +18,6 @@ return new class extends Migration
             $table->string('image');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('continent_id')->nullable();
-            $table->foreign('continent_id')->references('id')->on('continents')->onDelete('cascade');
-            $table->unsignedBigInteger('country_id')->nullable();
-            $table->foreign('country_id')->references('id')->on('countries');
             $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities');
             $table->timestamps();
