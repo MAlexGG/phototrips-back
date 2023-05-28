@@ -20,6 +20,7 @@ class PhotosSeeder extends Seeder
             'user_id' => 1,
             'continent_id' => 3,
             'country_id' => 1,
+            'city_id' => 1,
             'created_at' => '2023/03/26'
         ]);
 
@@ -31,6 +32,7 @@ class PhotosSeeder extends Seeder
             'user_id' => 2,
             'continent_id' => 1,
             'country_id' => 2,
+            'city_id' => 2,
             'created_at' => '2023/03/26'
         ]);
     }
