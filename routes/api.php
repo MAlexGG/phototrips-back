@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\PhotoController;
 use App\Models\Photo;
 use Illuminate\Http\Request;
@@ -29,5 +30,8 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/photos', [PhotoController::class, 'store']);
     Route::get('/photos/{id}', [PhotoController::class, 'show']);
     Route::delete('/photos/{id}', [PhotoController::class, 'destroy']);
+
+    Route::get('/cities', [CityController::class, 'index']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });
