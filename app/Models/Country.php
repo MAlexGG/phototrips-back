@@ -28,4 +28,10 @@ class Country extends Model
     {
         return $this->belongsTo(Continent::class);
     }
+
+    static function searchByName($name)
+    {
+        $country = Country::where('name', $name)->first();
+        return $country;
+    }
 }
