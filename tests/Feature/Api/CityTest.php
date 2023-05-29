@@ -93,7 +93,7 @@ class CityTest extends TestCase
         $response->assertJsonFragment(["msg" => "La ciudad ya existe"]);
     }
 
-    public function test_auth_user_can_see_a_city()
+    public function test_auth_user_can_see_a_city(): void
     {
         $this->withoutExceptionHandling();
 
@@ -109,5 +109,34 @@ class CityTest extends TestCase
 
         $response->assertStatus(200)
         ->assertJsonFragment(["name" => "New York"]);
+    }
+
+    public function test_auth_user_can_update_a_city(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        City::factory()->create([
+            "id" => 1,
+            "name" => "New York"
+        ]);
+
+        Country::factory()->create([
+            "id" => 1,
+            "name" => "Estados Unidos de Norte América"
+        ]);
+
+        $response = $this->putJson('/api/cities/1',[
+            "name" => "Nueva York",
+            "country" => "Estados Unidos de Norte América"
+        ]);
+
+        $response->assertStatus(200)
+        ->assertJsonFragment(["msg" => "La ciudad se ha actualizado correctamente"]);
+
+        //FALTA PROBAR EN POSTMAN
+
     }
 }

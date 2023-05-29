@@ -67,7 +67,28 @@ class CityController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            "name" => "required|max:255",
+            "country" => "required"
+        ]);
+
+        City::searchByName($request->name);
+
+        $country = Country::searchByName($request->country);
+        
+
+        if($country == null){
+            return response()->json(["msg" => "Crea un país para tu fotografía"]);
+        }
+
+        $city = City::find($id)->update([
+            "name" => $request->name,
+            "country_id" => $country->id
+        ]);
+
+        return response()->json([
+            "msg" => "La ciudad se ha actualizado correctamente"
+        ], 200);
     }
 
     /**
