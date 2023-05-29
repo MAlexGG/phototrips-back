@@ -28,8 +28,14 @@ class CityController extends Controller
             "country" => "required"
         ]);
 
+        $citySearched = City::searchByName($request->name);
+
         $country = Country::searchByName($request->country);
         
+        if($citySearched){
+            return response()->json(["msg" => "La ciudad ya existe"]);
+        }
+
         if($country == null){
             return response()->json(["msg" => "Crea un país para tu fotografía"]);
         }
@@ -45,8 +51,6 @@ class CityController extends Controller
             "city" => $city,
             "msg" => "La ciudad se ha creado correctamente"
         ], 201);
-
-        //PONER UN CONDICIONAL PARA QUE NO SE CREEN CIUDADES REPETIDAS
     }
 
     /**

@@ -42,7 +42,7 @@ class CountryTest extends TestCase
         $user = User::factory()->create();
         Auth::login($user);
 
-        $continent = Continent::factory()->create([
+        Continent::factory()->create([
             "name" => "Europa"
         ]);
 
@@ -69,6 +69,30 @@ class CountryTest extends TestCase
 
         $response->assertJsonFragment(["msg" => "Crea un continente para tu fotografía"]);
     }
+
+    public function test_auth_user_cannot_create_a_country_that_exists_in_db(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Country::factory()->create([
+            "name" => "España"
+        ]);
+
+        Continent::factory()->create([
+            "name" => "Europa"
+        ]);
+
+        $response = $this->postJson('/api/countries', [
+            "name" => "España",
+            "continent" => "Europa"
+        ]);
+
+        $response->assertJsonFragment(["msg" => "El país ya existe"]);
+    }
+
 
     public function test_auth_user_can_see_a_country()
     {

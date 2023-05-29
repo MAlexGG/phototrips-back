@@ -70,6 +70,29 @@ class CityTest extends TestCase
         $response->assertJsonFragment(["msg" => "Crea un país para tu fotografía"]);
     }
 
+    public function test_auth_user_cannot_create_a_city_That_exists_in_db(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        City::factory()->create([
+            "name" => "Quito"
+        ]);
+
+        Country::factory()->create([
+            "name" => "Ecuador"
+        ]);
+
+        $response = $this->postJson('/api/cities', [
+            "name" => "Quito",
+            "country" => "Ecuador"
+        ]);
+
+        $response->assertJsonFragment(["msg" => "La ciudad ya existe"]);
+    }
+
     public function test_auth_user_can_see_a_city()
     {
         $this->withoutExceptionHandling();

@@ -28,7 +28,13 @@ class CountryController extends Controller
             "continent" => "required"
         ]);
 
+        $countrySearched = Country::searchByName($request->name);
+
         $continent = Continent::searchByName($request->continent);
+
+        if($countrySearched){
+            return response()->json(["msg" => "El país ya existe"]);
+        }
 
         if($continent == null){
             return response()->json(["msg" => "Crea un continente para tu fotografía"]);
@@ -45,8 +51,6 @@ class CountryController extends Controller
             "country" => $country,
             "msg" => "El país se ha creado correctamente"
         ], 201);
-
-        //PONER UN CONDICIONAL PARA QUE NO SE CREEN PAISES REPETIDOS
     }
 
     /**
