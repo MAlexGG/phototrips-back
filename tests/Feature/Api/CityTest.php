@@ -69,4 +69,22 @@ class CityTest extends TestCase
 
         $response->assertJsonFragment(["msg" => "Crea un país para tu fotografía"]);
     }
+
+    public function test_auth_user_can_see_a_city()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        City::factory()->create([
+            "id" => 1,
+            "name" => "New York"
+        ]);
+
+        $response = $this->getJson('/api/cities/1');
+
+        $response->assertStatus(200)
+        ->assertJsonFragment(["name" => "New York"]);
+    }
 }
