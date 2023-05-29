@@ -69,4 +69,22 @@ class CountryTest extends TestCase
 
         $response->assertJsonFragment(["msg" => "Crea un continente para tu fotografía"]);
     }
+
+    public function test_auth_user_can_see_a_country()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Country::factory()->create([
+            "id" => 1,
+            "name" => "Dinamarca"
+        ]);
+
+        $response = $this->getJson('/api/countries/1');
+
+        $response->assertStatus(200)
+        ->assertJsonFragment(["name" => "Dinamarca"]);
+    }
 }

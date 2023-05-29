@@ -54,7 +54,8 @@ class CountryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $country = Country::find($id);
+        return response()->json($country, 200);
     }
 
     /**
