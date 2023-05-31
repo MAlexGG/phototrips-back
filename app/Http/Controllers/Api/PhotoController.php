@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\City;
 use App\Models\Photo;
-use App\Models\Country;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -84,9 +83,13 @@ class PhotoController extends Controller
             "city" => "required"
         ]);
 
-        $photo = Photo::find($id);
+        $photo = Photo::findPhotoByAuthUser($id);
 
         $city = City::searchByName($request->city);
+
+        if(!$photo){
+            return response()->json(["msg" => "No tienes una fotografía con ese identificador"]);
+        }
 
         if($city == null) {
             return response()->json(["msg" => "Crea una ciudad para tu fotografía"]);

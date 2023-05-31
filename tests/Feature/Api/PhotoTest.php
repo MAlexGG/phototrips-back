@@ -160,6 +160,42 @@ class PhotoTest extends TestCase
         $response->assertJsonFragment(["msg" => "Crea una ciudad para tu fotografía"]);
     }
 
+    public function test_auth_user_cannot_update_a_photo_of_somebody_else()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user1 = User::factory()->create([
+            "id" => 1
+        ]);
+        Auth::login($user1);
+
+        Photo::factory()->create([
+            "id" => 1,
+            "name" => "Arco del triunfo",
+            "user_id" => $user1->id
+        ]);
+
+        Auth::logout($user1);
+
+        $user2 = User::factory()->create([
+            "id" => 2
+        ]);
+        Auth::login($user2);
+
+        City::factory()->create([
+            "name" => "New York"
+        ]);
+
+        $response = $this->putJson('/api/photos/1', [
+            "name" => "Flatiron Building",
+            "description" => "Lorem Ipsum",
+            "image" => "http://flatiron.com",
+            "city"  => "New York"
+        ]);
+
+        $response->assertJsonFragment(["msg" => "No tienes una fotografía con ese identificador"]);
+    }
+
     public function test_auth_user_can_delete_a_photo()
     {
         $this->withoutExceptionHandling();
