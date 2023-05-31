@@ -77,7 +77,29 @@ class PhotoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            "name" => "required|max:125",
+            "description" => "required|max:500",
+            "image" => "required|max:500",
+            "city" => "required"
+        ]);
+
+        $photo = Photo::find($id);
+
+        $city = City::searchByName($request->city);
+
+        if($city == null) {
+            return response()->json(["msg" => "Crea una ciudad para tu fotografía"]);
+        }
+
+        $photo->update([
+            "name" => $request->name,
+            "description" => $request->description,
+            "image" => $request->image,
+            "city_id" => $city->id
+        ]);
+
+        return response()->json(["msg" => "La fotografía se ha editado correctamente"]);
     }
 
     /**

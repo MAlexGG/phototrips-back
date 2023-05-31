@@ -67,7 +67,7 @@ class PhotoTest extends TestCase
         $this->assertEquals($photo->name, "Oporto");  
     }
 
-    public function test_auth_user_can_see_a_owned_photo()
+    public function test_auth_user_can_see_an_owned_photo()
     {
         $this->withoutExceptionHandling();
         
@@ -105,6 +105,59 @@ class PhotoTest extends TestCase
         $response = $this->getJson('/api/photos/2');
 
         $response->assertJsonFragment(["msg" => "No tienes una fotografía con ese identificador"]);
+    }
+
+    public function test_auth_user_can_update_an_owned_photo()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = User::factory()->create();
+        Auth::login($user);
+        
+        Photo::factory()->create([
+            "id" => 1,
+            "name" => "Empire State Bulding",
+            "user_id" => $user->id
+        ]);
+
+        City::factory()->create([
+            "name" => "New York"
+        ]);
+
+        $response = $this->putJson('/api/photos/1',[
+            "name" => "Flatiron Building",
+            "description" => "Lorem ipsum",
+            "image" => "http://image.jpg",
+            "city" => "New York"
+        ]);
+
+        $city = Photo::first();
+
+        $response->assertJsonFragment(["msg" => "La fotografía se ha editado correctamente"]);
+        $this->assertEquals("Flatiron Building", $city->name);
+    }
+
+    public function test_auth_user_receive_message_for_update_a_photo_without_city_in_database()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = User::factory()->create();
+        Auth::login($user);
+        
+        Photo::factory()->create([
+            "id" => 1,
+            "name" => "Empire State Bulding",
+            "user_id" => $user->id
+        ]);
+
+        $response = $this->putJson('/api/photos/1',[
+            "name" => "Flatiron Building",
+            "description" => "Lorem ipsum",
+            "image" => "http://image.jpg",
+            "city" => "New York"
+        ]);
+
+        $response->assertJsonFragment(["msg" => "Crea una ciudad para tu fotografía"]);
     }
 
     public function test_auth_user_can_delete_a_photo()
