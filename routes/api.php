@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/photos/{id}', [PhotoController::class, 'show']);
     Route::put('/photos/{id}', [PhotoController::class, 'update']);
     Route::delete('/photos/{id}', [PhotoController::class, 'destroy']);
+    Route::get('/photos/city/{id}', [PhotoController::class, 'showByCity']);
 
     Route::get('/cities', [CityController::class, 'index']);
     Route::post('/cities', [CityController::class, 'store']);

@@ -45,4 +45,10 @@ class Photo extends Model
         return $photo;
     }
 
+    static function findPhotosByCity($id)
+    {
+        $photos = Photo::where('user_id', Auth::user()->id)->where('city_id', '=', $id)->get();
+        return $photos;
+    } 
+
 }

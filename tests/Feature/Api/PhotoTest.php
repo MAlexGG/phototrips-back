@@ -97,6 +97,7 @@ class PhotoTest extends TestCase
             "id" => 1
         ]);
         Auth::login($user);
+
         Photo::factory()->create([
             "id" => 1,
             "user_id" => $user->id
@@ -204,6 +205,7 @@ class PhotoTest extends TestCase
             "id" => 1
         ]);
         Auth::login($user);
+
         Photo::factory()->create([
             "id" => 1,
             "user_id" => $user->id
@@ -221,6 +223,7 @@ class PhotoTest extends TestCase
         
         $user1 = User::factory()->create();
         Auth::login($user1);
+
         Photo::factory()->create([
             "id" => 1,
             "user_id" => $user1->id
@@ -229,6 +232,7 @@ class PhotoTest extends TestCase
 
         $user2 = User::factory()->create();
         Auth::login($user2);
+
         Photo::factory()->create([
             "id" => 2,
             "user_id" => $user2->id
@@ -237,6 +241,38 @@ class PhotoTest extends TestCase
         $this->deleteJson('/api/photos/1');
 
         $this->assertCount(2, Photo::all());
+    }
+
+    public function test_auth_user_can_see_photos_by_city(): void
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        City::factory()->create([
+            "id" => 1,
+            "name" => "Tokio"
+        ]);
+
+        City::factory()->create([
+            "id" => 2,
+            "name" => "New York"
+        ]);
+
+        Photo::factory()->create([
+            "city_id" => 1,
+            "user_id" => $user->id
+        ]);
+
+        Photo::factory()->create([
+            "city_id" => 2,
+            "user_id" => $user->id
+        ]);
+
+        $response = $this->getJson('/api/photos/city/1');
+
+        $response->assertJsonCount(1);
     }
 
 }

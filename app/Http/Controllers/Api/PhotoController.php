@@ -123,4 +123,18 @@ class PhotoController extends Controller
             "msg" => "La fotografía se ha borrado correctamente"
         ], 200);
     }
+
+    public function showByCity(string $id)
+    {
+        $photos = Photo::findPhotosByCity($id);
+
+        if($photos == null){
+            return response()->json([
+                "msg" => "No tienes fotografías en esa ciudad"
+            ], 200);
+        }
+
+        return response()->json($photos, 200);
+
+    }
 }
