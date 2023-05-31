@@ -76,7 +76,7 @@ class CityController extends Controller
 
         $country = Country::searchByName($request->country);
         
-        if($citySearched && $citySearched->name == $request->name){
+        if($citySearched){
             return response()->json(["msg" => "La ciudad ya existe en la base de datos"]);
         }
 

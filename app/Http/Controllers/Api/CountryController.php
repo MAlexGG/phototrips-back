@@ -67,7 +67,30 @@ class CountryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            "name" => "required|max:255",
+            "continent" => "required"
+        ]);
+
+        $countrySearched = Country::searchByName($request->name);
+
+        $continent = Continent::searchByName($request->continent); 
+
+        if($countrySearched){
+            return response()->json(["msg" => "El país ya existe en la base de datos"]);
+        }
+
+        if($continent == null){
+            return response()->json(["msg" => "Crea un continente para tu fotografía"]);
+        }
+
+        Country::find($id)->update([
+            "name" => $request->name,
+            "continent" => $continent->id
+        ]);
+
+        return response()->json(["msg" => "El país se ha actualizado correctamente"]);
+
     }
 
     /**

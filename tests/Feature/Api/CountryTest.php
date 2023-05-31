@@ -111,4 +111,59 @@ class CountryTest extends TestCase
         $response->assertStatus(200)
         ->assertJsonFragment(["name" => "Dinamarca"]);
     }
+
+    public function test_auth_user_can_update_a_country(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Country::factory()->create([
+            "id" => 1,
+            "name" => "Dinamarca"
+        ]);
+
+        Continent::create([
+            "name" => "Europa"
+        ]);
+
+        $response = $this->putJson('/api/countries/1', [
+            "name" => "Portugal",
+            "continent" => "Europa"
+        ]);
+
+        $response->assertStatus(200)
+        ->assertJsonFragment(["msg" => "El país se ha actualizado correctamente"]);
+        $this->assertEquals("Portugal", Country::first()->name);
+    }
+
+    public function test_auth_user_cannot_update_a_country_that_exists_in_db(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Country::factory()->create([
+            "id" => 1,
+            "name" => "Dinamarca"
+        ]);
+
+        Country::factory()->create([
+            "id" => 2,
+            "name" => "Portugal"
+        ]);
+
+        Continent::create([
+            "name" => "Europa"
+        ]);
+
+        $response = $this->putJson('/api/countries/1', [
+            "name" => "Portugal",
+            "continent" => "Europa"
+        ]);
+
+        $response->assertJsonFragment(["msg" => "El país ya existe en la base de datos"]);
+    }
 }
