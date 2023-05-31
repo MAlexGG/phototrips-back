@@ -99,6 +99,9 @@ class CityController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $city = City::find($id);
+        $city->delete();
+
+        return response()->json(["msg" => "La ciudad se ha eliminado correctamente"]);
     }
 }

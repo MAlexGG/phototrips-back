@@ -70,7 +70,7 @@ class CityTest extends TestCase
         $response->assertJsonFragment(["msg" => "Crea un país para tu fotografía"]);
     }
 
-    public function test_auth_user_cannot_create_a_city_That_exists_in_db(): void
+    public function test_auth_user_cannot_create_a_city_that_exists_in_db(): void
     {
         $this->withoutExceptionHandling();
 
@@ -137,7 +137,7 @@ class CityTest extends TestCase
         ->assertJsonFragment(["msg" => "La ciudad se ha actualizado correctamente"]);
     }
 
-    public function test_auth_user_cannot_update_a_city_That_exists_in_db(): void
+    public function test_auth_user_cannot_update_a_city_that_exists_in_db(): void
     {
         $this->withoutExceptionHandling();
 
@@ -165,5 +165,24 @@ class CityTest extends TestCase
         ]);
 
         $response->assertJsonFragment(["msg" => "La ciudad ya existe en la base de datos"]);
+    }
+
+    public function test_auth_user_can_delete_a_city(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        City::factory()->create([
+            "id" => 1,
+            "name" => "Lisboa"
+        ]);
+
+        $response = $this->deleteJson('/api/cities/1');
+
+        $response->assertStatus(200)
+        ->assertJsonFragment(["msg" => "La ciudad se ha eliminado correctamente"]);
+        $this->assertCount(0, City::all());
     }
 }
