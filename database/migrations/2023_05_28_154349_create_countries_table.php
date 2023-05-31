@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('continent_id')->nullable();
-            $table->foreign('continent_id')->references('id')->on('continents');
+            $table->foreign('continent_id')->references('id')->on('continents')->onDelete('cascade');
             $table->timestamps();
         });
     }
