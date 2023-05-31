@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class City extends Model
 {
@@ -33,5 +34,11 @@ class City extends Model
     {
         $city = City::where('name', $name)->first();
         return $city;
+    }
+
+    static function orderByName()
+    {
+        $cities = City::orderBy('name')->get();
+        return $cities;
     }
 }

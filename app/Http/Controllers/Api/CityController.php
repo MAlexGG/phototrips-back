@@ -14,7 +14,7 @@ class CityController extends Controller
      */
     public function index()
     {
-        $cities = City::all();
+        $cities = City::orderByName();
         return response()->json($cities, 200);
     }
 

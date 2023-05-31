@@ -34,4 +34,10 @@ class Country extends Model
         $country = Country::where('name', $name)->first();
         return $country;
     }
+
+    static function orderByName()
+    {
+        $countries = Country::orderBy('name')->get();
+        return $countries;
+    }
 }
