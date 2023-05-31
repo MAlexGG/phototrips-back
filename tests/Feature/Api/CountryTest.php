@@ -112,6 +112,19 @@ class CountryTest extends TestCase
         ->assertJsonFragment(["name" => "Dinamarca"]);
     }
 
+    public function test_auth_user_receive_a_message_for_country_not_found(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->getJson('/api/countries/1');
+
+        $response->assertJsonFragment(["msg" => "El país no existe en la base de datos"]);
+    }
+
+
     public function test_auth_user_can_update_a_country(): void
     {
         $this->withoutExceptionHandling();

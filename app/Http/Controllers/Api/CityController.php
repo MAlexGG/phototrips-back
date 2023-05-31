@@ -59,6 +59,11 @@ class CityController extends Controller
     public function show(string $id)
     {
         $city = City::find($id);
+
+        if(!$city){
+            return response()->json(["msg" => "La ciudad no existe en la base de datos"]);
+        }
+
         return response()->json($city, 200);
     }
 

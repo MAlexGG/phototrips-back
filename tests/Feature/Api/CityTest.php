@@ -111,6 +111,19 @@ class CityTest extends TestCase
         ->assertJsonFragment(["name" => "New York"]);
     }
 
+    public function test_auth_user_receive_a_message_for_city_not_found(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->getJson('/api/cities/1');
+
+        $response->assertJsonFragment(["msg" => "La ciudad no existe en la base de datos"]);
+
+    }
+
     public function test_auth_user_can_update_a_city(): void
     {
         $this->withoutExceptionHandling();

@@ -59,6 +59,11 @@ class CountryController extends Controller
     public function show(string $id)
     {
         $country = Country::find($id);
+
+        if(!$country){
+            return response()->json(["msg" => "El país no existe en la base de datos"]);
+        }
+
         return response()->json($country, 200);
     }
 
