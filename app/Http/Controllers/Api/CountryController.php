@@ -103,6 +103,14 @@ class CountryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $country = Country::find($id);
+
+        if(!$country){
+            return response()->json(["msg" => "El país no existe en la base de datos"]);
+        }
+
+        $country->delete();
+
+        return response()->json(["msg" => "El país se ha eliminado correctamente"]);
     }
 }

@@ -180,5 +180,35 @@ class CountryTest extends TestCase
         $response->assertJsonFragment(["msg" => "El país ya existe en la base de datos"]);
     }
 
-    
+    public function test_auth_user_can_delete_a_country(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Country::factory()->create([
+            "id" => 1
+        ]);
+
+        $response = $this->deleteJson('/api/countries/1');
+
+        $response->assertStatus(200)
+        ->assertJsonFragment(["msg" => "El país se ha eliminado correctamente"]);
+        $this->assertCount(0, Country::all());
+    }
+
+    public function test_auth_user_receive_a_message_for_delete_a_country_that_is_not_in_database(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->deleteJson('/api/countries/1');
+
+        $response->assertStatus(200)
+        ->assertJsonFragment(["msg" => "El país no existe en la base de datos"]);
+        $this->assertCount(0, Country::all());
+    }
 }
