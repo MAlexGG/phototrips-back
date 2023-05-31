@@ -198,4 +198,16 @@ class CityTest extends TestCase
         ->assertJsonFragment(["msg" => "La ciudad se ha eliminado correctamente"]);
         $this->assertCount(0, City::all());
     }
+
+    public function test_auth_user_receive_a_message_for_delete_a_city_that_is_not_in_database(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->deleteJson('/api/cities/1');
+
+        $response->assertJsonFragment(["msg" => "La ciudad no existe en la base de datos"]);
+    }
 }

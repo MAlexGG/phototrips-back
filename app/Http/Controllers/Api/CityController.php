@@ -105,6 +105,11 @@ class CityController extends Controller
     public function destroy(string $id)
     {
         $city = City::find($id);
+
+        if(!$city){
+            return response()->json(["msg" => "La ciudad no existe en la base de datos"]);
+        }
+
         $city->delete();
 
         return response()->json(["msg" => "La ciudad se ha eliminado correctamente"]);
