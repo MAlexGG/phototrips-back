@@ -72,16 +72,19 @@ class CityController extends Controller
             "country" => "required"
         ]);
 
-        City::searchByName($request->name);
+        $citySearched = City::searchByName($request->name);
 
         $country = Country::searchByName($request->country);
         
+        if($citySearched && $citySearched->name == $request->name){
+            return response()->json(["msg" => "La ciudad ya existe en la base de datos"]);
+        }
 
         if($country == null){
             return response()->json(["msg" => "Crea un país para tu fotografía"]);
         }
 
-        $city = City::find($id)->update([
+        City::find($id)->update([
             "name" => $request->name,
             "country_id" => $country->id
         ]);

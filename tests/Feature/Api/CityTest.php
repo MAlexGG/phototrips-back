@@ -135,8 +135,35 @@ class CityTest extends TestCase
 
         $response->assertStatus(200)
         ->assertJsonFragment(["msg" => "La ciudad se ha actualizado correctamente"]);
+    }
 
-        //FALTA PROBAR EN POSTMAN
+    public function test_auth_user_cannot_update_a_city_That_exists_in_db(): void
+    {
+        $this->withoutExceptionHandling();
 
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        City::factory()->create([
+            "id" => 1,
+            "name" => "Lisboa"
+        ]);
+
+        City::factory()->create([
+            "id" => 2,
+            "name" => "Oporto"
+        ]);
+
+        Country::factory()->create([
+            "id" => 1,
+            "name" => "Portugal"
+        ]);
+
+        $response = $this->putJson('/api/cities/2', [
+            "name" => "Lisboa",
+            "country" => "Portugal"
+        ]);
+
+        $response->assertJsonFragment(["msg" => "La ciudad ya existe en la base de datos"]);
     }
 }
