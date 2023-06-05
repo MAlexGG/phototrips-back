@@ -128,13 +128,10 @@ class PhotoController extends Controller
     {
         $photos = Photo::findPhotosByCity($id);
 
-        if($photos == null){
-            return response()->json([
-                "msg" => "No tienes fotografías en esa ciudad"
-            ], 200);
+        if(count($photos) == 0){
+            return response()->json(["msg" => "No tienes fotografías en esa ciudad"]);
         }
 
         return response()->json($photos, 200);
-
     }
 }

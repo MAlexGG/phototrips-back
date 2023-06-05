@@ -275,4 +275,17 @@ class PhotoTest extends TestCase
         $response->assertJsonCount(1);
     }
 
+    public function test_auth_user_receive_message_if_dont_have_photos_by_city(): void
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->getJson('/api/photos/city/1');
+
+        $response->assertJsonFragment(["msg" => "No tienes fotografías en esa ciudad"]);
+
+    }
+
 }
