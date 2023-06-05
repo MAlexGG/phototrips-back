@@ -41,4 +41,10 @@ class City extends Model
         $cities = City::orderBy('name')->get();
         return $cities;
     }
+
+    static function findCitiesByCountry($id)
+    {
+        $cities = City::where('country_id', $id)->get();
+        return $cities;
+    }
 }

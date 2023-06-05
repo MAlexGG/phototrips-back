@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/cities/{id}', [CityController::class, 'show']);
     Route::put('/cities/{id}', [CityController::class, 'update']);
     Route::delete('/cities/{id}', [CityController::class, 'destroy']);
+    Route::get('/cities/country/{id}', [CityController::class, 'showByCountry']);
 
     Route::get('/countries', [CountryController::class, 'index']);
     Route::post('/countries', [CountryController::class, 'store']);

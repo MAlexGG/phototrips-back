@@ -114,4 +114,16 @@ class CityController extends Controller
 
         return response()->json(["msg" => "La ciudad se ha eliminado correctamente"]);
     }
+
+    public function showByCountry(string $id)
+    {
+        $cities = City::findCitiesByCountry($id);
+
+        if(count($cities) == 0){
+            return response()->json(["msg" => "No tienes ciudades en ese país"]);
+        }
+
+        return response()->json($cities, 200);
+
+    }
 }

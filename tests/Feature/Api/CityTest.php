@@ -210,4 +210,53 @@ class CityTest extends TestCase
 
         $response->assertJsonFragment(["msg" => "La ciudad no existe en la base de datos"]);
     }
+
+    public function test_auth_user_can_see_a_city_by_country(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Country::factory()->create([
+            "id" => 1
+        ]);
+
+        Country::factory()->create([
+            "id" => 2
+        ]);
+        
+        City::factory()->create([
+            "country_id" => 1
+        ]);
+
+        City::factory()->create([
+            "country_id" => 2
+        ]);
+
+        $response = $this->getJson('/api/cities/country/1');
+
+        $response->assertStatus(200)
+        ->assertJsonCount(1);
+    }
+
+    public function test_auth_user_receive_message_if_dont_have_cities_by_country(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Country::factory()->create([
+            "id" => 1
+        ]);
+
+        City::factory()->create([
+            "country_id" => 1
+        ]);
+
+        $response = $this->getJson('/api/cities/country/2');
+
+        $response->assertJsonFragment(["msg" => "No tienes ciudades en ese país"]);
+    }
 }

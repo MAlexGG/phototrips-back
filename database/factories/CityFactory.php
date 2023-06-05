@@ -17,7 +17,6 @@ class CityFactory extends Factory
     public function definition(): array
     {
         return [
-            "id" => 1,
             "name" => fake()->city(),
             'created_at' => fake()->date()
         ];
