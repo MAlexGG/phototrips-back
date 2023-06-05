@@ -118,6 +118,10 @@ class CountryController extends Controller
     {
         $countries = Country::findCountriesByContinent($id);
 
+        if(count($countries) == 0){
+            return response()->json(["msg" => "No tienes países en ese continente"]);
+        }
+
         return response()->json($countries, 200);
     }
 }

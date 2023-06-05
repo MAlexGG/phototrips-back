@@ -240,6 +240,18 @@ class CountryTest extends TestCase
 
         $response->assertStatus(200)
         ->assertJsonCount(1);
+    }
+
+    public function test_auth_user_receive_message_if_dont_have_countries_by_continent(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->getJson('/api/countries/continent/1');
+
+        $response->assertJsonFragment(["msg" => "No tienes países en ese continente"]);
 
     }
 }
