@@ -210,4 +210,36 @@ class CountryTest extends TestCase
         ->assertJsonFragment(["msg" => "El país no existe en la base de datos"]);
         $this->assertCount(0, Country::all());
     }
+
+    public function test_auth_user_can_see_a_country_by_continent(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        Continent::factory()->create([
+            "id" => 1
+        ]);
+
+        Continent::factory()->create([
+            "id" => 2
+        ]);
+
+        Country::factory()->create([
+            "id" => 1,
+            "continent_id" => 1
+        ]);
+
+        Country::factory()->create([
+            "id" => 2,
+            "continent_id" => 2
+        ]);
+
+        $response = $this->getJson('/api/countries/continent/1');
+
+        $response->assertStatus(200)
+        ->assertJsonCount(1);
+
+    }
 }

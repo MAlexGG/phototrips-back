@@ -40,4 +40,10 @@ class Country extends Model
         $countries = Country::orderBy('name')->get();
         return $countries;
     }
+
+    static function findCountriesByContinent($id)
+    {
+        $countries = Country::where('continent_id', $id)->get();
+        return $countries;
+    }
 }

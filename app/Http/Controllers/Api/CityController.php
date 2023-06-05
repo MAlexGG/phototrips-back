@@ -124,6 +124,5 @@ class CityController extends Controller
         }
 
         return response()->json($cities, 200);
-
     }
 }

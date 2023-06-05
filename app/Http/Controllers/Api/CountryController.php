@@ -113,4 +113,11 @@ class CountryController extends Controller
 
         return response()->json(["msg" => "El país se ha eliminado correctamente"]);
     }
+
+    public function showByContinent(string $id)
+    {
+        $countries = Country::findCountriesByContinent($id);
+
+        return response()->json($countries, 200);
+    }
 }
