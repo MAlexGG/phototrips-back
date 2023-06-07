@@ -27,7 +27,7 @@ class PhotoController extends Controller
         $request->validate([
             "name" => "required|max:125",
             "description" => "required|max:500",
-            "image" => "required|max:500",
+            "image" => "required|image",
             "city" => "required"
         ]);
 
@@ -46,6 +46,10 @@ class PhotoController extends Controller
             "user_id" => $user->id,
             "city_id" => $city->id
         ]);
+
+        if($request->hasFile('image')){
+            $photo['image'] = $request->file('image')->store('img', 'public');
+        }
 
         $photo->save();
 

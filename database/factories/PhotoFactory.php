@@ -19,7 +19,7 @@ class PhotoFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(255),
-            'image' => fake()->imageUrl(),
+            'image' => fake()->image(),
             'created_at' => fake()->date()
         ];
     }

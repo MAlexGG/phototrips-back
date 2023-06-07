@@ -6,9 +6,12 @@ use Tests\TestCase;
 use App\Models\City;
 use App\Models\User;
 use App\Models\Photo;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Assert;
 
 class PhotoTest extends TestCase
 {
@@ -52,10 +55,14 @@ class PhotoTest extends TestCase
             "name" => "Tokio"
         ]);
 
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->image('tokio-tower.jpg');
+
         $response = $this->postJson('/api/photos', [
-            "name" => "Oporto",
+            "name" => "Tokio Tower",
             "description" => "Lorem ipsum",
-            "image" => "http://ejemplo.com/1.png",
+            "image" => $file,
             "user_id" => $user->id,
             "city" => "Tokio"
         ]);
@@ -64,7 +71,9 @@ class PhotoTest extends TestCase
 
         $response->assertStatus(201)
         ->assertJsonFragment(["msg" => "La fotografía se ha creado correctamente"]);
-        $this->assertEquals($photo->name, "Oporto");  
+        $this->assertEquals($photo->name, "Tokio Tower");
+        $this->assertTrue($file->hashName() !== '');
+        Assert::assertFileExists(Storage::disk('public')->path('img/' . $file->hashName()));
     }
 
     public function test_auth_user_can_see_an_owned_photo()
