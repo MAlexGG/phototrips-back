@@ -134,8 +134,12 @@ class PhotoController extends Controller
                 "msg" => "No tienes una fotografía con ese identificador"
             ], 200);
         } 
+
+        $destination = public_path("storage\\" . $photo->image);
         
         $photo->delete();
+        File::delete($destination);
+        
         return response()->json([
             "msg" => "La fotografía se ha borrado correctamente"
         ], 200);

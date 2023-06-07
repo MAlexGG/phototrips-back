@@ -138,7 +138,7 @@ class PhotoTest extends TestCase
 
         $file = UploadedFile::fake()->image('flatiron-building.jpg');
 
-        $response = $this->putJson('/api/photos/1',[
+        $response = $this->postJson('/api/photos/1',[
             "name" => "Flatiron Building",
             "description" => "Lorem ipsum",
             "image" => $file,
@@ -170,7 +170,7 @@ class PhotoTest extends TestCase
 
         $file = UploadedFile::fake()->image('flatiron-building.jpg');
 
-        $response = $this->putJson('/api/photos/1',[
+        $response = $this->postJson('/api/photos/1',[
             "name" => "Flatiron Building",
             "description" => "Lorem ipsum",
             "image" => $file,
@@ -210,7 +210,7 @@ class PhotoTest extends TestCase
 
         $file = UploadedFile::fake()->image('flatiron-building.jpg');
 
-        $response = $this->putJson('/api/photos/1', [
+        $response = $this->postJson('/api/photos/1', [
             "name" => "Flatiron Building",
             "description" => "Lorem Ipsum",
             "image" => $file,
