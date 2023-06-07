@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/photos', [PhotoController::class, 'index']);
     Route::post('/photos', [PhotoController::class, 'store']);
     Route::get('/photos/{id}', [PhotoController::class, 'show']);
-    Route::put('/photos/{id}', [PhotoController::class, 'update']);
+    Route::post('/photos/{id}', [PhotoController::class, 'update']);
     Route::delete('/photos/{id}', [PhotoController::class, 'destroy']);
     Route::get('/photos/city/{id}', [PhotoController::class, 'showByCity']);
 

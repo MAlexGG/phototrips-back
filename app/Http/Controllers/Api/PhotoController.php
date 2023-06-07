@@ -82,11 +82,12 @@ class PhotoController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            "name" => "max:125",
-            "description" => "max:500",
-            "image" => "image"
+            "name" => "required|max:125",
+            "description" => "required|max:500",
+            "image" => "image",
+            "city" => "required"
         ]);
-
+ 
         $photo = Photo::findPhotoByAuthUser($id);
 
         $city = City::searchByName($request->city);
