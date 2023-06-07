@@ -7,6 +7,7 @@ use App\Models\Photo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class PhotoController extends Controller
 {
@@ -81,10 +82,9 @@ class PhotoController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            "name" => "required|max:125",
-            "description" => "required|max:500",
-            "image" => "required|max:500",
-            "city" => "required"
+            "name" => "max:125",
+            "description" => "max:500",
+            "image" => "image"
         ]);
 
         $photo = Photo::findPhotoByAuthUser($id);
@@ -99,10 +99,22 @@ class PhotoController extends Controller
             return response()->json(["msg" => "Crea una ciudad para tu fotografía"]);
         }
 
+        $destination = public_path("storage\\" . $photo->image);
+        $filename = '';
+
+        if ($request->hasFile('image')) {
+            if (File::exists($destination)) {
+                File::delete($destination);
+            }
+            $filename = $request->file('image')->store('img', 'public');
+        } else {
+            $filename = $photo->image;
+        }
+
         $photo->update([
             "name" => $request->name,
             "description" => $request->description,
-            "image" => $request->image,
+            "image" => $filename,
             "city_id" => $city->id
         ]);
 

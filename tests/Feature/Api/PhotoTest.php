@@ -134,10 +134,14 @@ class PhotoTest extends TestCase
             "name" => "New York"
         ]);
 
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->image('flatiron-building.jpg');
+
         $response = $this->putJson('/api/photos/1',[
             "name" => "Flatiron Building",
             "description" => "Lorem ipsum",
-            "image" => "http://image.jpg",
+            "image" => $file,
             "city" => "New York"
         ]);
 
@@ -145,6 +149,8 @@ class PhotoTest extends TestCase
 
         $response->assertJsonFragment(["msg" => "La fotografía se ha editado correctamente"]);
         $this->assertEquals("Flatiron Building", $city->name);
+        $this->assertTrue($file->hashName() !== '');
+        Assert::assertFileExists(Storage::disk('public')->path('img/' . $file->hashName()));
     }
 
     public function test_auth_user_receive_message_for_update_a_photo_without_city_in_database()
@@ -160,10 +166,14 @@ class PhotoTest extends TestCase
             "user_id" => $user->id
         ]);
 
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->image('flatiron-building.jpg');
+
         $response = $this->putJson('/api/photos/1',[
             "name" => "Flatiron Building",
             "description" => "Lorem ipsum",
-            "image" => "http://image.jpg",
+            "image" => $file,
             "city" => "New York"
         ]);
 
@@ -196,10 +206,14 @@ class PhotoTest extends TestCase
             "name" => "New York"
         ]);
 
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->image('flatiron-building.jpg');
+
         $response = $this->putJson('/api/photos/1', [
             "name" => "Flatiron Building",
             "description" => "Lorem Ipsum",
-            "image" => "http://flatiron.com",
+            "image" => $file,
             "city"  => "New York"
         ]);
 
