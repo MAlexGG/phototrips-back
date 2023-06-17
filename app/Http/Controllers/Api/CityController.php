@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\City;
+use App\Models\Country;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Country;
 
 class CityController extends Controller
 {
@@ -15,6 +16,9 @@ class CityController extends Controller
     public function index()
     {
         $cities = City::orderByName();
+        if(count($cities) == 0){
+            return response()->json(["msg" => "No tienes ninguna ciudad creada"]);
+        }
         return response()->json($cities, 200);
     }
 
@@ -41,7 +45,7 @@ class CityController extends Controller
         }
 
         $city = City::create([
-            "name" => $request->name,
+            "name" => Str::of($request->name)->title(),
             "country_id" => $country->id
         ]);
 
@@ -90,7 +94,7 @@ class CityController extends Controller
         }
 
         City::find($id)->update([
-            "name" => $request->name,
+            "name" => Str::of($request->name)->title(),
             "country_id" => $country->id
         ]);
 

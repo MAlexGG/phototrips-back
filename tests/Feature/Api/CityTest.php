@@ -32,6 +32,18 @@ class CityTest extends TestCase
         ->assertJsonCount(1);
     }
 
+    public function test_auth_user_receive_message_when_there_is_no_cities(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->getJson('/api/cities');
+
+        $response->assertJsonFragment(["msg" => "No tienes ninguna ciudad creada"]);
+    }
+
     public function test_auth_user_can_create_a_city(): void 
     {
         $this->withoutExceptionHandling();
@@ -44,7 +56,7 @@ class CityTest extends TestCase
         ]);
 
         $response = $this->postJson('/api/cities', [
-            "name" => "Quito",
+            "name" => "quito",
             "country" => "Ecuador"
         ]);
 
@@ -133,7 +145,7 @@ class CityTest extends TestCase
 
         City::factory()->create([
             "id" => 1,
-            "name" => "New York"
+            "name" => "new york"
         ]);
 
         Country::factory()->create([

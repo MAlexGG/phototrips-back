@@ -34,6 +34,18 @@ class CountryTest extends TestCase
         ->assertJsonCount(1);
     }
 
+    public function test_auth_user_receive_message_when_there_is_no_cities(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->getJson('/api/countries');
+
+        $response->assertJsonFragment(["msg" => "No tienes ningún país creado"]);
+    }
+
     public function test_auth_user_can_create_a_country(): void
     {
         $this->withoutExceptionHandling();

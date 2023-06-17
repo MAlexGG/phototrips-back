@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Country;
+use App\Models\Continent;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Continent;
 
 class CountryController extends Controller
 {
@@ -15,6 +16,9 @@ class CountryController extends Controller
     public function index()
     {
         $countries = Country::orderByName();
+        if(count($countries) == 0){
+            return response()->json(["msg" => "No tienes ningún país creado"]);
+        }
         return response()->json($countries, 200);
     }
 
@@ -41,7 +45,7 @@ class CountryController extends Controller
         }
 
         $country = Country::create([
-            "name" => $request->name,
+            "name" => Str::of($request->name)->title(),
             "continent_id" => $continent->id 
         ]);
 
@@ -90,7 +94,7 @@ class CountryController extends Controller
         }
 
         Country::find($id)->update([
-            "name" => $request->name,
+            "name" => Str::of($request->name)->title(),
             "continent" => $continent->id
         ]);
 
