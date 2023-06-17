@@ -17,6 +17,9 @@ class PhotoController extends Controller
     public function index()
     {
         $photos = Photo::findPhotosByAuthUser();
+        if(count($photos) == 0){
+            return response()->json(["msg" => "No tienes aún fotografías cargadas"]);
+        }
         return response()->json($photos, 200);
     }
 

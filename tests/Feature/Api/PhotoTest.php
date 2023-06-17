@@ -44,6 +44,19 @@ class PhotoTest extends TestCase
         ->assertJsonCount(1);
     }
 
+    public function test_auth_user_receive_message_when_there_is_no_photos(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Auth::login($user);
+
+        $response = $this->getJson('/api/photos');
+
+        $response->assertJsonFragment(["msg" => "No tienes aún fotografías cargadas"]);
+    }
+
+
     public function test_auth_user_can_create_a_photo(): void
     {
         $this->withoutExceptionHandling();
