@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\Code;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -15,23 +16,32 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
+            'code' => 'required'
         ]);
 
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->save();
+        $code = Code::getCode();
 
-        $token = $user->createToken($request->email)->plainTextToken;
+        if(!$code || $code->code != $request->code){
+            return response()->json(['msg' => 'Necesitas un código válido para registrarte, pídeselo a tu administrador']);
+        }
 
-        return response()->json([
-            'res' => true,
-            'msg' => 'Usuario se ha registrado correctamente',
-            'token' => $token,
-            'user' => $user
-        ], 201);
+        if($code->code == $request->code) {
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->save();
+    
+            $token = $user->createToken($request->email)->plainTextToken;
+    
+            return response()->json([
+                'res' => true,
+                'msg' => 'Usuario se ha registrado correctamente',
+                'token' => $token,
+                'user' => $user
+            ], 201);
+        }
     }
 
     public function login(Request $request)
