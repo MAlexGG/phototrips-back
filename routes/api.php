@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CountryController;
@@ -47,6 +48,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::delete('/countries/{id}', [CountryController::class, 'destroy']);
     Route::get('/countries/continent/{id}', [CountryController::class, 'showByContinent']);
 
-    Route::get('/validate/{id}', [AuthController::class, 'validateByAdmin']);
+    Route::get('/validate/{id}', [AdminController::class, 'validateByAdmin']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });

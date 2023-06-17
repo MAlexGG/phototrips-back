@@ -32,7 +32,8 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function validateByAdmin(string $id)
+    //Debería estar en AdminController
+    /* public function validateByAdmin(string $id)
     {
         if(Auth::user()->isAdmin){
             User::validate($id);
@@ -43,7 +44,7 @@ class AuthController extends Controller
         } 
 
         return response()->json(["msg" => "No tienes authorización para validar usuarios"]);      
-    }
+    } */
 
     public function login(Request $request)
     {
