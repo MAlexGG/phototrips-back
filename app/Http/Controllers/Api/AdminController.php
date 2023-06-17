@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    public function index()
+    {
+        $users = User::orderByName();
+        if(count($users) == 0){
+            return response()->json(["msg" => "No existen usuarios en la base de datos"]);
+        }
+        return response()->json($users, 200);      
+    }
+
     public function validateByAdmin(string $id)
     {
         if(Auth::user()->isAdmin){
@@ -19,6 +28,6 @@ class AdminController extends Controller
             ], 200);
         } 
 
-        return response()->json(["msg" => "No tienes authorización para validar usuarios"]);      
+        return response()->json(["msg" => "No tienes autorización para validar usuarios"]);      
     }
 }

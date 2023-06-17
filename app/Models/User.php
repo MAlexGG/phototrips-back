@@ -52,4 +52,10 @@ class User extends Authenticatable
     {
         User::where('id', $id)->update(['isValidated' => true]);
     }
+
+    static function orderByName()
+    {
+        $users = User::where('isAdmin', '=', false)->orderBy('name')->get();
+        return $users;
+    }
 }

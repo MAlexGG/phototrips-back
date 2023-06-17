@@ -16,6 +16,40 @@ class AdminTest extends TestCase
 
     use RefreshDatabase;
 
+    public function test_user_admin_can_see_all_users(): void
+    {
+        $admin = User::factory()->create([
+            'id' => 1,
+            'isValidated' => true,
+            'isAdmin' => true
+        ]);
+
+        User::factory()->create();
+
+        Auth::login($admin);
+
+        $response = $this->getJson('/api/users');
+
+        $response->assertStatus(200)
+        ->assertJsonCount(1);
+    }
+
+    public function test_user_admin_receive_a_message_when_there_is_no_admin_users(): void
+    {
+        $admin = User::factory()->create([
+            'id' => 1,
+            'isValidated' => true,
+            'isAdmin' => true
+        ]);
+
+        Auth::login($admin);
+
+        $response = $this->getJson('/api/users');
+
+        $response->assertJsonFragment(["msg" => "No existen usuarios en la base de datos"]);
+
+    }
+
     public function test_user_admin_can_validate_user_registration(): void
     {
         $admin = User::factory()->create([
@@ -61,6 +95,6 @@ class AdminTest extends TestCase
 
         $response = $this->getJson('/api/validate/2');
         
-        $response->assertJsonFragment(["msg" => "No tienes authorización para validar usuarios"]);
+        $response->assertJsonFragment(["msg" => "No tienes autorización para validar usuarios"]);
     } 
 }

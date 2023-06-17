@@ -28,8 +28,6 @@ class CountryTest extends TestCase
 
         $response = $this->getJson('/api/countries');
 
-        Country::first();
-
         $response->assertStatus(200)
         ->assertJsonCount(1);
     }
