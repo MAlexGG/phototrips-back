@@ -47,5 +47,6 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::delete('/countries/{id}', [CountryController::class, 'destroy']);
     Route::get('/countries/continent/{id}', [CountryController::class, 'showByContinent']);
 
+    Route::get('/validate/{id}', [AuthController::class, 'validateByAdmin']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });

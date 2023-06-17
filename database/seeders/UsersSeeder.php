@@ -20,6 +20,8 @@ class UsersSeeder extends Seeder
             'email' => 'a@mail.com',
             'email_verified_at' => null,
             'password' => Hash::make('123456789'),
+            'isValidated' => true,
+            'isAdmin' => true,
             'created_at' => '2023/03/26'
         ]);
 

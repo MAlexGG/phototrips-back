@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        /* 'isValidated' => false */
+        'isValidated'
     ];
 
     /**
@@ -46,5 +46,10 @@ class User extends Authenticatable
     public function photos()
     {
         return $this->hasMany(Photo::class);
+    }
+
+    static function validate($id)
+    {
+        User::where('id', $id)->update(['isValidated' => true]);
     }
 }
