@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $this->hasMany(Photo::class);
     }
 
+    public function cities()
+    {
+        return $this->hasMany(City::class);
+    }
+
     static function validate($id)
     {
         User::where('id', $id)->update(['isValidated' => true]);

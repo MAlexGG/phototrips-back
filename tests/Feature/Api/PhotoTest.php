@@ -65,7 +65,8 @@ class PhotoTest extends TestCase
         Auth::login($user);
 
         City::factory()->create([
-            "name" => "Tokio"
+            "name" => "Tokio",
+            "user_id" => $user->id
         ]);
 
         Storage::fake('public');
@@ -144,7 +145,8 @@ class PhotoTest extends TestCase
         ]);
 
         City::factory()->create([
-            "name" => "New York"
+            "name" => "New York",
+            "user_id" => $user->id
         ]);
 
         Storage::fake('public');

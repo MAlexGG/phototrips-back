@@ -7,6 +7,7 @@ use App\Models\Country;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CityController extends Controller
 {
@@ -15,7 +16,7 @@ class CityController extends Controller
      */
     public function index()
     {
-        $cities = City::orderByName();
+        $cities = City::findCitiesByAuthUser();
         if(count($cities) == 0){
             return response()->json(["msg" => "No tienes ninguna ciudad creada"]);
         }
@@ -46,7 +47,8 @@ class CityController extends Controller
 
         $city = City::create([
             "name" => Str::of($request->name)->title(),
-            "country_id" => $country->id
+            "country_id" => $country->id,
+            "user_id" => Auth::user()->id 
         ]);
 
         $city->save();
@@ -62,7 +64,7 @@ class CityController extends Controller
      */
     public function show(string $id)
     {
-        $city = City::find($id);
+        $city = City::findCityByAuthUser($id);
 
         if(!$city){
             return response()->json(["msg" => "La ciudad no existe en la base de datos"]);
@@ -81,21 +83,25 @@ class CityController extends Controller
             "country" => "required"
         ]);
 
-        $citySearched = City::searchByName($request->name);
+        $cityUpdated = City::findCityByAuthUser($id);
+        if(!$cityUpdated){
+            return response()->json(["msg" => "No tienes una ciudad con ese identificador"]);
+        }
 
-        $country = Country::searchByName($request->country);
-        
+        $citySearched = City::searchByName(Str::of($request->name)->title());
         if($citySearched){
             return response()->json(["msg" => "La ciudad ya existe en la base de datos"]);
         }
 
+        $country = Country::searchByName($request->country);
         if($country == null){
             return response()->json(["msg" => "Crea un país para tu fotografía"]);
         }
 
-        City::find($id)->update([
+        $cityUpdated->update([
             "name" => Str::of($request->name)->title(),
-            "country_id" => $country->id
+            "country_id" => $country->id,
+            "user_id" => Auth::user()->id
         ]);
 
         return response()->json([
@@ -108,7 +114,7 @@ class CityController extends Controller
      */
     public function destroy(string $id)
     {
-        $city = City::find($id);
+        $city = City::findCityByAuthUser($id);
 
         if(!$city){
             return response()->json(["msg" => "La ciudad no existe en la base de datos"]);

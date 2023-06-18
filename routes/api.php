@@ -49,7 +49,8 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/countries/continent/{id}', [CountryController::class, 'showByContinent']);
 
     Route::get('/validate/{id}', [AdminController::class, 'validateByAdmin']);
-    Route::get('/users', [AdminController::class, 'index']);
+    Route::get('/users', [AdminController::class, 'getUsers']);
+    Route::delete('/users/{id}', [AdminController::class, 'destroyUsers']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });

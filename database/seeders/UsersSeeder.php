@@ -31,6 +31,16 @@ class UsersSeeder extends Seeder
             'email' => 'e@mail.com',
             'email_verified_at' => null,
             'password' => Hash::make('123456789'),
+            'isValidated' => true,
+            'created_at' => '2023/03/26'
+        ]);
+
+        DB::table('users')->insert([
+            'id' => '3',
+            'name' => 'Gaby',
+            'email' => 'g@mail.com',
+            'email_verified_at' => null,
+            'password' => Hash::make('123456789'),
             'created_at' => '2023/03/26'
         ]);
     }

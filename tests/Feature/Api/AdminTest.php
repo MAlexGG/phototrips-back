@@ -5,7 +5,6 @@ namespace Tests\Feature\Api;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminTest extends TestCase
@@ -49,6 +48,41 @@ class AdminTest extends TestCase
         $response->assertJsonFragment(["msg" => "No existen usuarios en la base de datos"]);
 
     }
+
+    public function test_user_no_admin_cannot_see_all_users(): void
+    {
+        $user = User::factory()->create([
+            'id' => 1,
+            'isValidated' => true,
+            'isAdmin' => false
+        ]);
+
+        Auth::login($user);
+
+        $response = $this->getJson('/api/users');
+
+        $response->assertJsonFragment(["msg" => "No tienes autorización"]);
+    }
+//FALTA TERMINAR
+   /*  public function test_user_admin_can_delete_no_admin_users(): void
+    {
+        $admin = User::factory()->create([
+            'id' => 1,
+            'isValidated' => true,
+            'isAdmin' => true
+        ]);
+
+        User::factory()->create([
+            'id' => 2
+        ]);
+
+        Auth::login($admin);
+
+        $response = $this->deleteJson('/api/users/2');
+
+        $response->assertJsonFragment(["msg" => "Has eliminado exitosamente al usuario"])
+        ->assertJsonCount(1);
+    } */
 
     public function test_user_admin_can_validate_user_registration(): void
     {
