@@ -8,7 +8,7 @@
 ***
 ## General Info
 
-This is a website for personal use, it's a photo album that shows your photos classified by continent, country and city, you can upload an image, with a title and description, the API it's made in laravel, MVC architecture with TDD and it's consumed by a React App, the front repo: https://github.com/MAlexGG/phototrips-front.git
+This is a website for personal use, it's a photo album that shows your photos classified by continent, country and city, you can upload an image, with a title and description, CRUD for cities and countries, you can register as a regular user, but an admin user will validate your registration for usign the web. The API it's made with laravel, MVC architecture with TDD and it's consumed by a React App, the front repo: https://github.com/MAlexGG/phototrips-front.git
 
 ### Database relationships
 
