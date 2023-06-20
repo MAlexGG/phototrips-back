@@ -12,7 +12,7 @@ This is a website for personal use, it's a photo album that shows your photos cl
 
 ### Database relationships
 
-![relacionBDphototrips](https://github.com/MAlexGG/phototrips-back/assets/73828751/c23bc372-4537-428f-ab6d-8585e1fec6ae)
+![bd](https://github.com/MAlexGG/phototrips-back/assets/73828751/c9c24d86-293c-432b-9c57-747c8f4e9b2e)
 
 ## Technologies
 It was developed with laravel, sanctum for authorization and authentication, tested with PHPUnit and Postman. 
