@@ -38,8 +38,17 @@ class AdminController extends Controller
 
     public function destroyUsers(string $id)
     {
-        if(Auth::user()->isAdmin){
-            
+        $user = User::getNoAdminUser($id);
+
+        if(Auth::user()->isAdmin == false){
+            return response()->json(['msg' => 'No tienes autorización para eliminar usuarios']);
         }
+
+        if(!$user){
+            return response()->json(['msg' => 'No existe un usuario con ese identificador']);  
+        }
+        
+        $user->delete();
+            return response()->json(['msg' => 'Has eliminado exitosamente al usuario']);  
     }
 }

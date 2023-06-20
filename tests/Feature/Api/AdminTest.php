@@ -45,7 +45,7 @@ class AdminTest extends TestCase
 
         $response = $this->getJson('/api/users');
 
-        $response->assertJsonFragment(["msg" => "No existen usuarios en la base de datos"]);
+        $response->assertJsonFragment(['msg' => 'No existen usuarios en la base de datos']);
 
     }
 
@@ -61,10 +61,10 @@ class AdminTest extends TestCase
 
         $response = $this->getJson('/api/users');
 
-        $response->assertJsonFragment(["msg" => "No tienes autorización"]);
+        $response->assertJsonFragment(['msg' => 'No tienes autorización']);
     }
-//FALTA TERMINAR
-   /*  public function test_user_admin_can_delete_no_admin_users(): void
+
+    public function test_user_admin_can_delete_no_admin_users(): void
     {
         $admin = User::factory()->create([
             'id' => 1,
@@ -80,9 +80,44 @@ class AdminTest extends TestCase
 
         $response = $this->deleteJson('/api/users/2');
 
-        $response->assertJsonFragment(["msg" => "Has eliminado exitosamente al usuario"])
+        $response->assertJsonFragment(['msg' => 'Has eliminado exitosamente al usuario'])
         ->assertJsonCount(1);
-    } */
+    }
+
+    public function test_user_cannot_delete_users(): void
+    {
+        $user = User::factory()->create([
+            'id' => 1,
+            'isValidated' => true,
+            'isAdmin' => false
+        ]);
+
+        User::factory()->create([
+            'id' => 2
+        ]);
+
+        Auth::login($user);
+
+        $response = $this->deleteJson('/api/users/2');
+
+        $response->assertJsonFragment(['msg' => 'No tienes autorización para eliminar usuarios']);
+    }
+
+    public function test_user_admin_receive_a_message_is_there_no_user_id_to_delete(): void
+    {
+        $admin = User::factory()->create([
+            'id' => 1,
+            'isValidated' => true,
+            'isAdmin' => true
+        ]);
+
+        Auth::login($admin);
+
+        $response = $this->deleteJson('/api/users/2');
+
+        $response->assertJsonFragment(['msg' => 'No existe un usuario con ese identificador'])
+        ->assertJsonCount(1);
+    }
 
     public function test_user_admin_can_validate_user_registration(): void
     {
@@ -93,10 +128,10 @@ class AdminTest extends TestCase
         ]);
 
         $this->postJson('/api/register',[
-            "id" => 2,
-            "name" => "Eli",
-            "email" => "e@mail.com",
-            "password" => "123456789" 
+            'id' => 2,
+            'name' => 'Eli',
+            'email' => 'e@mail.com',
+            'password' => '123456789' 
         ]);
 
         Auth::login($admin);
@@ -105,7 +140,7 @@ class AdminTest extends TestCase
 
         $user = User::find(2);
         
-        $response->assertJsonFragment(["msg" => "Usuario ha sido validado correctamente"]);
+        $response->assertJsonFragment(['msg' => 'Usuario ha sido validado correctamente']);
         $this->assertCount(2, User::all());
         $this->assertTrue($user->isValidated == true);
     } 
@@ -119,16 +154,16 @@ class AdminTest extends TestCase
         ]);
 
         $this->postJson('/api/register',[
-            "id" => 2,
-            "name" => "Eli",
-            "email" => "e@mail.com",
-            "password" => "123456789" 
+            'id' => 2,
+            'name' => 'Eli',
+            'email' => 'e@mail.com',
+            'password' => '123456789' 
         ]);
 
         Auth::login($notAdmin);
 
         $response = $this->getJson('/api/validate/2');
         
-        $response->assertJsonFragment(["msg" => "No tienes autorización para validar usuarios"]);
+        $response->assertJsonFragment(['msg' => 'No tienes autorización para validar usuarios']);
     } 
 }

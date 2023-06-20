@@ -68,4 +68,10 @@ class User extends Authenticatable
         $users = User::where('isAdmin', '=', false)->orderBy('name')->get();
         return $users;
     }
+
+    static function getNoAdminUser($id)
+    {
+        $user = User::where('isAdmin', '=', false)->where('id', '=', $id)->first();
+        return $user;
+    }
 }

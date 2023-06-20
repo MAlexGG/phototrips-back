@@ -19,13 +19,13 @@ class AuthTest extends TestCase
     public function test_user_can_register(): void
     {
         $response = $this->postJson('/api/register',[
-            "name" => "Eli",
-            "email" => "e@mail.com",
-            "password" => "123456789"  
+            'name' => 'Eli',
+            'email' => 'e@mail.com',
+            'password' => '123456789'  
         ]);
         
-        $response->assertJsonFragment(["msg" => 'Gracias por registrarte, tu administrador tiene que validar tu registro para poder acceder a la aplicación']);
-        $response->assertJsonFragment(["name" => "Eli"]);
+        $response->assertJsonFragment(['msg' => 'Gracias por registrarte, tu administrador tiene que validar tu registro para poder acceder a la aplicación']);
+        $response->assertJsonFragment(['name' => 'Eli']);
         $this->assertCount(1, User::all());
     }
 
@@ -36,13 +36,13 @@ class AuthTest extends TestCase
             'password' => 987654321
         ]);
 
-        $response->assertJsonFragment(["msg" => "No existe un usuario con ese mail, por favor regístrate"]);
+        $response->assertJsonFragment(['msg' => 'No existe un usuario con ese mail, por favor regístrate']);
     }
 
     public function test_user_cannot_login_without_validation(): void
     {
         $user = User::factory()->create([
-            'email' => "e@mail.com",
+            'email' => 'e@mail.com',
             'password' => 123456789,
             'isValidated' => false
         ]);
@@ -52,7 +52,7 @@ class AuthTest extends TestCase
             'password' => $user->password
         ]);
 
-        $response->assertJsonFragment(["msg" => "Tu usuario no está validado, contacta a tu administrador"]);
+        $response->assertJsonFragment(['msg' => 'Tu usuario no está validado, contacta a tu administrador']);
     }
 
     public function test_user_cannot_login_with_invalid_password(): void
@@ -67,7 +67,7 @@ class AuthTest extends TestCase
             'password' => 123456789
         ]);
 
-        $response->assertJsonFragment(["msg" => ["Las credenciales son incorrectas."]]);
+        $response->assertJsonFragment(['msg' => ['Las credenciales son incorrectas.']]);
     }
 
     public function test_user_can_login_with_valid_password(): void
@@ -82,7 +82,7 @@ class AuthTest extends TestCase
             'password' => 'password'
         ]);
 
-        $response->assertJsonFragment(["msg" => "Usuario identificado correctamente"]);
+        $response->assertJsonFragment(['msg' => 'Usuario identificado correctamente']);
 
     }
 
