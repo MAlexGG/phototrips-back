@@ -67,8 +67,7 @@ class CityTest extends TestCase
 
         $response = $this->postJson('/api/cities', [
             'name' => 'quito',
-            'country' => 'Ecuador',
-            'user_id' => $user->id
+            'country' => 'Ecuador'
         ]);
 
         $city = City::first();
@@ -87,8 +86,7 @@ class CityTest extends TestCase
 
         $response = $this->postJson('/api/cities', [
             'name' => 'Quito',
-            'country' => 'Ecuador',
-            'user_id' => $user->id
+            'country' => 'Ecuador'
         ]);
 
         $response->assertJsonFragment(['msg' => 'Crea un país para tu fotografía']);
@@ -107,13 +105,13 @@ class CityTest extends TestCase
         ]);
 
         Country::factory()->create([
-            'name' => 'Ecuador'
+            'name' => 'Ecuador',
+            'user_id' => $user->id
         ]);
 
         $response = $this->postJson('/api/cities', [
             'name' => 'Quito',
-            'country' => 'Ecuador',
-            'user_id' => $user->id
+            'country' => 'Ecuador'
         ]);
 
         $response->assertJsonFragment(['msg' => 'La ciudad ya existe']);
@@ -160,7 +158,8 @@ class CityTest extends TestCase
 
         Country::factory()->create([
             'id' => 1,
-            'name' => 'Estados Unidos de Norte América'
+            'name' => 'Estados Unidos de Norte América',
+            'user_id' => $user->id
         ]);
 
         City::factory()->create([
@@ -190,7 +189,8 @@ class CityTest extends TestCase
         Auth::login($user);
 
         Country::factory()->create([
-            'name' => 'Japón'
+            'name' => 'Japón',
+            'user_id' => $user->id
         ]);
 
         $response = $this->putJson('/api/cities/1',[
@@ -244,19 +244,23 @@ class CityTest extends TestCase
         Auth::login($user);
 
         Country::factory()->create([
-            'id' => 1
+            'id' => 1,
+            'user_id' => $user->id
         ]);
 
         Country::factory()->create([
-            'id' => 2
+            'id' => 2,
+            'user_id' => $user->id
         ]);
         
         City::factory()->create([
-            'country_id' => 1
+            'country_id' => 1,
+            'user_id' => $user->id
         ]);
 
         City::factory()->create([
-            'country_id' => 2
+            'country_id' => 2,
+            'user_id' => $user->id
         ]);
 
         $response = $this->getJson('/api/cities/country/1');
@@ -273,11 +277,13 @@ class CityTest extends TestCase
         Auth::login($user);
 
         Country::factory()->create([
-            'id' => 1
+            'id' => 1,
+            'user_id' => $user->id
         ]);
 
         City::factory()->create([
-            'country_id' => 1
+            'country_id' => 1,
+            'user_id' => $user->id
         ]);
 
         $response = $this->getJson('/api/cities/country/2');

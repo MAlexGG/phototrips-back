@@ -38,7 +38,7 @@ class City extends Model
 
     static function searchByName($name)
     {
-        $city = City::where('user_id', Auth::user()->id)->where('name', "=", $name)->first();
+        $city = City::where('user_id', Auth::user()->id)->where('name', '=', $name)->first();
         return $city;
     }
 
@@ -56,7 +56,7 @@ class City extends Model
 
     static function findCitiesByCountry($id)
     {
-        $cities = City::where('user_id', Auth::user()->id)->where('country_id', $id)->get();
+        $cities = City::where('user_id', Auth::user()->id)->where('country_id', '=', $id)->get();
         return $cities;
     }
 }
