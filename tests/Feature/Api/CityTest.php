@@ -32,7 +32,7 @@ class CityTest extends TestCase
         $user2 = User::factory()->create();
         Auth::login($user2);
         City::factory()->create([
-            "user_id" => $user2->id
+            'user_id' => $user2->id
         ]);
 
         $response = $this->getJson('/api/cities');
@@ -50,7 +50,7 @@ class CityTest extends TestCase
 
         $response = $this->getJson('/api/cities');
 
-        $response->assertJsonFragment(["msg" => "No tienes ninguna ciudad creada"]);
+        $response->assertJsonFragment(['msg' => 'No tienes ninguna ciudad creada']);
     }
 
     public function test_auth_user_can_create_a_city(): void 
@@ -61,20 +61,21 @@ class CityTest extends TestCase
         Auth::login($user);
 
         Country::factory()->create([
-            "name" => "Ecuador"
+            'name' => 'Ecuador',
+            'user_id' => $user->id
         ]);
 
         $response = $this->postJson('/api/cities', [
-            "name" => "quito",
-            "country" => "Ecuador",
-            "user_id" => $user->id
+            'name' => 'quito',
+            'country' => 'Ecuador',
+            'user_id' => $user->id
         ]);
 
         $city = City::first();
 
         $response->assertStatus(201)
-        ->assertJsonFragment(["msg" => "La ciudad se ha creado correctamente"]);
-        $this->assertEquals($city->name, "Quito");  
+        ->assertJsonFragment(['msg' => 'La ciudad se ha creado correctamente']);
+        $this->assertEquals($city->name, 'Quito');  
     }
 
     public function test_auth_user_cannot_create_a_city_without_country(): void 
@@ -85,12 +86,12 @@ class CityTest extends TestCase
         Auth::login($user);
 
         $response = $this->postJson('/api/cities', [
-            "name" => "Quito",
-            "country" => "Ecuador",
-            "user_id" => $user->id
+            'name' => 'Quito',
+            'country' => 'Ecuador',
+            'user_id' => $user->id
         ]);
 
-        $response->assertJsonFragment(["msg" => "Crea un país para tu fotografía"]);
+        $response->assertJsonFragment(['msg' => 'Crea un país para tu fotografía']);
     }
 
     public function test_auth_user_cannot_create_a_city_that_exists_in_db(): void
@@ -101,21 +102,21 @@ class CityTest extends TestCase
         Auth::login($user);
 
         City::factory()->create([
-            "name" => "Quito",
-            "user_id" => $user->id
+            'name' => 'Quito',
+            'user_id' => $user->id
         ]);
 
         Country::factory()->create([
-            "name" => "Ecuador"
+            'name' => 'Ecuador'
         ]);
 
         $response = $this->postJson('/api/cities', [
-            "name" => "Quito",
-            "country" => "Ecuador",
-            "user_id" => $user->id
+            'name' => 'Quito',
+            'country' => 'Ecuador',
+            'user_id' => $user->id
         ]);
 
-        $response->assertJsonFragment(["msg" => "La ciudad ya existe"]);
+        $response->assertJsonFragment(['msg' => 'La ciudad ya existe']);
     }
 
     public function test_auth_user_can_see_a_city(): void
@@ -126,15 +127,15 @@ class CityTest extends TestCase
         Auth::login($user);
 
         City::factory()->create([
-            "id" => 1,
-            "name" => "New York",
-            "user_id" => $user->id
+            'id' => 1,
+            'name' => 'New York',
+            'user_id' => $user->id
         ]);
 
         $response = $this->getJson('/api/cities/1');
 
         $response->assertStatus(200)
-        ->assertJsonFragment(["name" => "New York"]);
+        ->assertJsonFragment(['name' => 'New York']);
     }
 
     public function test_auth_user_receive_a_message_for_city_not_found(): void
@@ -146,7 +147,7 @@ class CityTest extends TestCase
 
         $response = $this->getJson('/api/cities/1');
 
-        $response->assertJsonFragment(["msg" => "La ciudad no existe en la base de datos"]);
+        $response->assertJsonFragment(['msg' => 'La ciudad no existe en la base de datos']);
 
     }
 
@@ -158,24 +159,24 @@ class CityTest extends TestCase
         Auth::login($user);
 
         Country::factory()->create([
-            "id" => 1,
-            "name" => "Estados Unidos de Norte América"
+            'id' => 1,
+            'name' => 'Estados Unidos de Norte América'
         ]);
 
         City::factory()->create([
-            "id" => 1,
-            "name" => "new york",
-            "country_id" => 1,
-            "user_id" => $user->id
+            'id' => 1,
+            'name' => 'new york',
+            'country_id' => 1,
+            'user_id' => $user->id
         ]);
 
         $response = $this->putJson('/api/cities/1',[
-            "name" => "Miami",
-            "country" => "Estados Unidos de Norte América",
+            'name' => 'Miami',
+            'country' => 'Estados Unidos de Norte América',
         ]);
 
         $response->assertStatus(200)
-        ->assertJsonFragment(["msg" => "La ciudad se ha actualizado correctamente"]);
+        ->assertJsonFragment(['msg' => 'La ciudad se ha actualizado correctamente']);
     }
 
     public function test_auth_user_receive_a_message_for_cities_not_found(): void
@@ -183,21 +184,21 @@ class CityTest extends TestCase
         $this->withoutExceptionHandling();
 
         $user = User::factory()->create([
-            "id" => 2
+            'id' => 2
         ]);
 
         Auth::login($user);
 
         Country::factory()->create([
-            "name" => "Japón"
+            'name' => 'Japón'
         ]);
 
         $response = $this->putJson('/api/cities/1',[
-            "name" => "kyoto",
-            "country" => "Japón",
+            'name' => 'kyoto',
+            'country' => 'Japón',
         ]);
 
-        $response->assertJsonFragment(["msg" => "No tienes una ciudad con ese identificador"]);
+        $response->assertJsonFragment(['msg' => 'No tienes una ciudad con ese identificador']);
 
         
 
@@ -211,15 +212,15 @@ class CityTest extends TestCase
         Auth::login($user);
 
         City::factory()->create([
-            "id" => 1,
-            "name" => "Lisboa",
-            "user_id" => $user->id
+            'id' => 1,
+            'name' => 'Lisboa',
+            'user_id' => $user->id
         ]);
 
         $response = $this->deleteJson('/api/cities/1');
 
         $response->assertStatus(200)
-        ->assertJsonFragment(["msg" => "La ciudad se ha eliminado correctamente"]);
+        ->assertJsonFragment(['msg' => 'La ciudad se ha eliminado correctamente']);
         $this->assertCount(0, City::all());
     }
 
@@ -232,7 +233,7 @@ class CityTest extends TestCase
 
         $response = $this->deleteJson('/api/cities/1');
 
-        $response->assertJsonFragment(["msg" => "La ciudad no existe en la base de datos"]);
+        $response->assertJsonFragment(['msg' => 'La ciudad no existe en la base de datos']);
     }
 
     public function test_auth_user_can_see_a_city_by_country(): void
@@ -243,19 +244,19 @@ class CityTest extends TestCase
         Auth::login($user);
 
         Country::factory()->create([
-            "id" => 1
+            'id' => 1
         ]);
 
         Country::factory()->create([
-            "id" => 2
+            'id' => 2
         ]);
         
         City::factory()->create([
-            "country_id" => 1
+            'country_id' => 1
         ]);
 
         City::factory()->create([
-            "country_id" => 2
+            'country_id' => 2
         ]);
 
         $response = $this->getJson('/api/cities/country/1');
@@ -272,15 +273,15 @@ class CityTest extends TestCase
         Auth::login($user);
 
         Country::factory()->create([
-            "id" => 1
+            'id' => 1
         ]);
 
         City::factory()->create([
-            "country_id" => 1
+            'country_id' => 1
         ]);
 
         $response = $this->getJson('/api/cities/country/2');
 
-        $response->assertJsonFragment(["msg" => "No tienes ciudades en ese país"]);
+        $response->assertJsonFragment(['msg' => 'No tienes ciudades en ese país']);
     }
 }

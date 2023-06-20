@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Country extends Model
 {
@@ -12,6 +13,7 @@ class Country extends Model
     protected $fillable = [
         'name',
         'continent_id',
+        'user_id'
     ];
 
     protected $hidden = [
@@ -29,15 +31,26 @@ class Country extends Model
         return $this->belongsTo(Continent::class);
     }
 
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     static function searchByName($name)
     {
-        $country = Country::where('name', $name)->first();
+        $country = Country::where('user_id', Auth::user()->id)->where('name', $name)->first();
         return $country;
     }
 
-    static function orderByName()
+    static function findCountriesByAuthUser()
     {
-        $countries = Country::orderBy('name')->get();
+        $countries = Country::where('user_id', Auth::user()->id)->orderBy('name')->get();
+        return $countries;
+    }
+
+    static function findCountryByAuthUser($id)
+    {
+        $countries = Country::where('user_id', Auth::user()->id)->where('id', '=', $id)->first();
         return $countries;
     }
 

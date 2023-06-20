@@ -17,6 +17,7 @@ class CountriesSeeder extends Seeder
             'id' => 1,
             'name' => 'Japón',
             'continent_id' => 3,
+            'user_id' => 1,
             'created_at' => '2023/05/28'
         ]);
 
@@ -24,6 +25,7 @@ class CountriesSeeder extends Seeder
             'id' => 2,
             'name' => 'Ecuador',
             'continent_id' => 1,
+            'user_id' => 2,
             'created_at' => '2023/05/28'
         ]);
     }

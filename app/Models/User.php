@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(City::class);
     }
 
+    public function countries()
+    {
+        return $this->hasMany(Country::class);
+    }
+
     static function validate($id)
     {
         User::where('id', $id)->update(['isValidated' => true]);
