@@ -28,14 +28,14 @@ class PhotoTest extends TestCase
         $user1 = User::factory()->create();
         Auth::login($user1);
         Photo::factory()->create([
-            "user_id" => $user1->id
+            'user_id' => $user1->id
         ]);
         Auth::logout($user1);
 
         $user2 = User::factory()->create();
         Auth::login($user2);
         Photo::factory()->create([
-            "user_id" => $user2->id
+            'user_id' => $user2->id
         ]);
         
         $response = $this->getJson('/api/photos');
@@ -53,7 +53,7 @@ class PhotoTest extends TestCase
 
         $response = $this->getJson('/api/photos');
 
-        $response->assertJsonFragment(["msg" => "No tienes aún fotografías cargadas"]);
+        $response->assertJsonFragment(['msg' => 'No tienes aún fotografías cargadas']);
     }
 
 
@@ -65,8 +65,8 @@ class PhotoTest extends TestCase
         Auth::login($user);
 
         City::factory()->create([
-            "name" => "Tokio",
-            "user_id" => $user->id
+            'name' => 'Tokio',
+            'user_id' => $user->id
         ]);
 
         Storage::fake('public');
@@ -74,18 +74,17 @@ class PhotoTest extends TestCase
         $file = UploadedFile::fake()->image('tokio-tower.jpg');
 
         $response = $this->postJson('/api/photos', [
-            "name" => "Tokio Tower",
-            "description" => "Lorem ipsum",
-            "image" => $file,
-            "user_id" => $user->id,
-            "city" => "Tokio"
+            'name' => 'Tokio Tower',
+            'description' => 'Lorem ipsum',
+            'image' => $file,
+            'city' => 'Tokio'
         ]);
 
         $photo = Photo::first();
 
         $response->assertStatus(201)
-        ->assertJsonFragment(["msg" => "La fotografía se ha creado correctamente"]);
-        $this->assertEquals($photo->name, "Tokio Tower");
+        ->assertJsonFragment(['msg' => 'La fotografía se ha creado correctamente']);
+        $this->assertEquals($photo->name, 'Tokio Tower');
         $this->assertTrue($file->hashName() !== '');
         Assert::assertFileExists(Storage::disk('public')->path('img/' . $file->hashName()));
     }
@@ -95,13 +94,13 @@ class PhotoTest extends TestCase
         $this->withoutExceptionHandling();
         
         $user = User::factory()->create([
-            "id" => 1
+            'id' => 1
         ]);
         Auth::login($user);
 
         Photo::factory()->create([
-            "id" => 1,
-            "user_id" => $user->id
+            'id' => 1,
+            'user_id' => $user->id
         ]);
 
         $response = $this->getJson('/api/photos/1');
@@ -117,18 +116,18 @@ class PhotoTest extends TestCase
         $this->withoutExceptionHandling();
         
         $user = User::factory()->create([
-            "id" => 1
+            'id' => 1
         ]);
         Auth::login($user);
 
         Photo::factory()->create([
-            "id" => 1,
-            "user_id" => $user->id
+            'id' => 1,
+            'user_id' => $user->id
         ]);
 
         $response = $this->getJson('/api/photos/2');
 
-        $response->assertJsonFragment(["msg" => "No tienes una fotografía con ese identificador"]);
+        $response->assertJsonFragment(['msg' => 'No tienes una fotografía con ese identificador']);
     }
 
     public function test_auth_user_can_update_an_owned_photo()
@@ -139,14 +138,14 @@ class PhotoTest extends TestCase
         Auth::login($user);
         
         Photo::factory()->create([
-            "id" => 1,
-            "name" => "Empire State Bulding",
-            "user_id" => $user->id
+            'id' => 1,
+            'name' => 'Empire State Bulding',
+            'user_id' => $user->id
         ]);
 
         City::factory()->create([
-            "name" => "New York",
-            "user_id" => $user->id
+            'name' => 'New York',
+            'user_id' => $user->id
         ]);
 
         Storage::fake('public');
@@ -154,16 +153,16 @@ class PhotoTest extends TestCase
         $file = UploadedFile::fake()->image('flatiron-building.jpg');
 
         $response = $this->postJson('/api/photos/1',[
-            "name" => "Flatiron Building",
-            "description" => "Lorem ipsum",
-            "image" => $file,
-            "city" => "New York"
+            'name' => 'Flatiron Building',
+            'description' => 'Lorem ipsum',
+            'image' => $file,
+            'city' => 'New York'
         ]);
 
         $city = Photo::first();
 
-        $response->assertJsonFragment(["msg" => "La fotografía se ha editado correctamente"]);
-        $this->assertEquals("Flatiron Building", $city->name);
+        $response->assertJsonFragment(['msg' => 'La fotografía se ha editado correctamente']);
+        $this->assertEquals('Flatiron Building', $city->name);
         $this->assertTrue($file->hashName() !== '');
         Assert::assertFileExists(Storage::disk('public')->path('img/' . $file->hashName()));
     }
@@ -176,9 +175,9 @@ class PhotoTest extends TestCase
         Auth::login($user);
         
         Photo::factory()->create([
-            "id" => 1,
-            "name" => "Empire State Bulding",
-            "user_id" => $user->id
+            'id' => 1,
+            'name' => 'Empire State Bulding',
+            'user_id' => $user->id
         ]);
 
         Storage::fake('public');
@@ -186,13 +185,13 @@ class PhotoTest extends TestCase
         $file = UploadedFile::fake()->image('flatiron-building.jpg');
 
         $response = $this->postJson('/api/photos/1',[
-            "name" => "Flatiron Building",
-            "description" => "Lorem ipsum",
-            "image" => $file,
-            "city" => "New York"
+            'name' => 'Flatiron Building',
+            'description' => 'Lorem ipsum',
+            'image' => $file,
+            'city' => 'New York'
         ]);
 
-        $response->assertJsonFragment(["msg" => "Crea una ciudad para tu fotografía"]);
+        $response->assertJsonFragment(['msg' => 'Crea una ciudad para tu fotografía']);
     }
 
     public function test_auth_user_cannot_update_a_photo_of_somebody_else()
@@ -200,25 +199,26 @@ class PhotoTest extends TestCase
         $this->withoutExceptionHandling();
         
         $user1 = User::factory()->create([
-            "id" => 1
+            'id' => 1
         ]);
         Auth::login($user1);
 
         Photo::factory()->create([
-            "id" => 1,
-            "name" => "Arco del triunfo",
-            "user_id" => $user1->id
+            'id' => 1,
+            'name' => 'Arco del triunfo',
+            'user_id' => $user1->id
         ]);
 
         Auth::logout($user1);
 
         $user2 = User::factory()->create([
-            "id" => 2
+            'id' => 2
         ]);
         Auth::login($user2);
 
         City::factory()->create([
-            "name" => "New York"
+            'name' => 'New York',
+            'user_id' => $user2->id
         ]);
 
         Storage::fake('public');
@@ -226,13 +226,13 @@ class PhotoTest extends TestCase
         $file = UploadedFile::fake()->image('flatiron-building.jpg');
 
         $response = $this->postJson('/api/photos/1', [
-            "name" => "Flatiron Building",
-            "description" => "Lorem Ipsum",
-            "image" => $file,
-            "city"  => "New York"
+            'name' => 'Flatiron Building',
+            'description' => 'Lorem Ipsum',
+            'image' => $file,
+            'city'  => 'New York'
         ]);
 
-        $response->assertJsonFragment(["msg" => "No tienes una fotografía con ese identificador"]);
+        $response->assertJsonFragment(['msg' => 'No tienes una fotografía con ese identificador']);
     }
 
     public function test_auth_user_can_delete_a_photo()
@@ -240,13 +240,13 @@ class PhotoTest extends TestCase
         $this->withoutExceptionHandling();
         
         $user = User::factory()->create([
-            "id" => 1
+            'id' => 1
         ]);
         Auth::login($user);
 
         Photo::factory()->create([
-            "id" => 1,
-            "user_id" => $user->id
+            'id' => 1,
+            'user_id' => $user->id
         ]);
 
         $response = $this->deleteJson('/api/photos/1');
@@ -263,8 +263,8 @@ class PhotoTest extends TestCase
         Auth::login($user1);
 
         Photo::factory()->create([
-            "id" => 1,
-            "user_id" => $user1->id
+            'id' => 1,
+            'user_id' => $user1->id
         ]);
         Auth::logout($user1);
 
@@ -272,8 +272,8 @@ class PhotoTest extends TestCase
         Auth::login($user2);
 
         Photo::factory()->create([
-            "id" => 2,
-            "user_id" => $user2->id
+            'id' => 2,
+            'user_id' => $user2->id
         ]);
 
         $this->deleteJson('/api/photos/1');
@@ -289,23 +289,25 @@ class PhotoTest extends TestCase
         Auth::login($user);
 
         City::factory()->create([
-            "id" => 1,
-            "name" => "Tokio"
+            'id' => 1,
+            'name' => 'Tokio',
+            'user_id' => $user->id
         ]);
 
         City::factory()->create([
-            "id" => 2,
-            "name" => "New York"
+            'id' => 2,
+            'name' => 'New York',
+            'user_id' => $user->id
         ]);
 
         Photo::factory()->create([
-            "city_id" => 1,
-            "user_id" => $user->id
+            'city_id' => 1,
+            'user_id' => $user->id
         ]);
 
         Photo::factory()->create([
-            "city_id" => 2,
-            "user_id" => $user->id
+            'city_id' => 2,
+            'user_id' => $user->id
         ]);
 
         $response = $this->getJson('/api/photos/city/1');
@@ -322,7 +324,7 @@ class PhotoTest extends TestCase
 
         $response = $this->getJson('/api/photos/city/1');
 
-        $response->assertJsonFragment(["msg" => "No tienes fotografías en esa ciudad"]);
+        $response->assertJsonFragment(['msg' => 'No tienes fotografías en esa ciudad']);
 
     }
 

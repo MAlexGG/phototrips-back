@@ -18,7 +18,7 @@ class PhotoController extends Controller
     {
         $photos = Photo::findPhotosByAuthUser();
         if(count($photos) == 0){
-            return response()->json(["msg" => "No tienes aún fotografías cargadas"]);
+            return response()->json(['msg' => 'No tienes aún fotografías cargadas']);
         }
         return response()->json($photos, 200);
     }
@@ -29,10 +29,10 @@ class PhotoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "name" => "required|max:125",
-            "description" => "required|max:500",
-            "image" => "required|image",
-            "city" => "required"
+            'name' => 'required|max:125',
+            'description' => 'required|max:500',
+            'image' => 'required|image',
+            'city' => 'required'
         ]);
 
         $user = Auth::user();
@@ -40,15 +40,15 @@ class PhotoController extends Controller
         $city = City::searchByName($request->city);
 
         if($city == null){
-            return response()->json(["msg" => "Crea una ciudad para tu fotografía"]);
+            return response()->json(['msg' => 'Crea una ciudad para tu fotografía']);
         }
 
         $photo = Photo::create([
-            "name" => $request->name,
-            "description" => $request->description,
-            "image" => $request->image,
-            "user_id" => $user->id,
-            "city_id" => $city->id
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $request->image,
+            'user_id' => $user->id,
+            'city_id' => $city->id
         ]);
 
         if($request->hasFile('image')){
@@ -58,8 +58,8 @@ class PhotoController extends Controller
         $photo->save();
 
         return response()->json([
-            "photo" => $photo, 
-            "msg" => "La fotografía se ha creado correctamente"
+            'photo' => $photo, 
+            'msg' => 'La fotografía se ha creado correctamente'
         ], 201);
     }
 
@@ -72,7 +72,7 @@ class PhotoController extends Controller
 
         if($photo == null){
             return response()->json([
-                "msg" => "No tienes una fotografía con ese identificador"
+                'msg' => 'No tienes una fotografía con ese identificador'
             ], 200);
         } 
 
@@ -85,10 +85,10 @@ class PhotoController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            "name" => "required|max:125",
-            "description" => "required|max:500",
-            "image" => "image",
-            "city" => "required"
+            'name' => 'required|max:125',
+            'description' => 'required|max:500',
+            'image' => 'image',
+            'city' => 'required'
         ]);
  
         $photo = Photo::findPhotoByAuthUser($id);
@@ -96,14 +96,14 @@ class PhotoController extends Controller
         $city = City::searchByName($request->city);
 
         if(!$photo){
-            return response()->json(["msg" => "No tienes una fotografía con ese identificador"]);
+            return response()->json(['msg' => 'No tienes una fotografía con ese identificador']);
         }
 
         if($city == null) {
-            return response()->json(["msg" => "Crea una ciudad para tu fotografía"]);
+            return response()->json(['msg' => 'Crea una ciudad para tu fotografía']);
         }
 
-        $destination = public_path("storage\\" . $photo->image);
+        $destination = public_path('storage\\' . $photo->image);
         $filename = '';
 
         if ($request->hasFile('image')) {
@@ -116,13 +116,13 @@ class PhotoController extends Controller
         }
 
         $photo->update([
-            "name" => $request->name,
-            "description" => $request->description,
-            "image" => $filename,
-            "city_id" => $city->id
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $filename,
+            'city_id' => $city->id
         ]);
 
-        return response()->json(["msg" => "La fotografía se ha editado correctamente"]);
+        return response()->json(['msg' => 'La fotografía se ha editado correctamente']);
     }
 
     /**
@@ -134,17 +134,17 @@ class PhotoController extends Controller
 
         if($photo == null){
             return response()->json([
-                "msg" => "No tienes una fotografía con ese identificador"
+                'msg' => 'No tienes una fotografía con ese identificador'
             ], 200);
         } 
 
-        $destination = public_path("storage\\" . $photo->image);
+        $destination = public_path('storage\\' . $photo->image);
         
         $photo->delete();
         File::delete($destination);
         
         return response()->json([
-            "msg" => "La fotografía se ha borrado correctamente"
+            'msg' => 'La fotografía se ha borrado correctamente'
         ], 200);
     }
 
@@ -153,7 +153,7 @@ class PhotoController extends Controller
         $photos = Photo::findPhotosByCity($id);
 
         if(count($photos) == 0){
-            return response()->json(["msg" => "No tienes fotografías en esa ciudad"]);
+            return response()->json(['msg' => 'No tienes fotografías en esa ciudad']);
         }
 
         return response()->json($photos, 200);

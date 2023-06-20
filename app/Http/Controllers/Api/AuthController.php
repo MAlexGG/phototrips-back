@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -27,8 +26,8 @@ class AuthController extends Controller
             $user->save();
 
         return response()->json([
-            "msg" => "Gracias por registrarte, tu administrador tiene que validar tu registro para poder acceder a la aplicación",
-            "user" => $user
+            'msg' => 'Gracias por registrarte, tu administrador tiene que validar tu registro para poder acceder a la aplicación',
+            'user' => $user
         ], 200);
     }
 
@@ -42,11 +41,11 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if(!$user){
-            return response()->json(["msg" => "No existe un usuario con ese mail, por favor regístrate"]);
+            return response()->json(['msg' => 'No existe un usuario con ese mail, por favor regístrate']);
         }
 
         if($user->isValidated == false){
-            return response()->json(["msg" => "Tu usuario no está validado, contacta a tu administrador"]); 
+            return response()->json(['msg' => 'Tu usuario no está validado, contacta a tu administrador']); 
         }
         
         if(!Hash::check($request->password, $user->password)){

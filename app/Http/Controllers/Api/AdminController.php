@@ -15,12 +15,12 @@ class AdminController extends Controller
         if(Auth::user()->isAdmin)
         {
             if(count($users) == 0){
-                return response()->json(["msg" => "No existen usuarios en la base de datos"]);
+                return response()->json(['msg' => 'No existen usuarios en la base de datos']);
             }
             return response()->json($users, 200);
         }
 
-        return response()->json(["msg" => "No tienes autorización"]);
+        return response()->json(['msg' => 'No tienes autorización']);
     }
 
     public function validateByAdmin(string $id)
@@ -29,11 +29,11 @@ class AdminController extends Controller
             User::validate($id);
             return response()->json([
                 'res' => true,
-                "msg" => "Usuario ha sido validado correctamente",
+                'msg' => 'Usuario ha sido validado correctamente',
             ], 200);
         } 
 
-        return response()->json(["msg" => "No tienes autorización para validar usuarios"]);      
+        return response()->json(['msg' => 'No tienes autorización para validar usuarios']);      
     }
 
     public function destroyUsers(string $id)
