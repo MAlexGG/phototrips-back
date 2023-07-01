@@ -52,7 +52,7 @@ class AuthTest extends TestCase
             'password' => $user->password
         ]);
 
-        $response->assertJsonFragment(['msg' => 'Tu usuario no está validado, contacta a tu administrador']);
+        $response->assertJsonFragment(['msg' => 'Tu usuario no está validado, contacta con tu administrador']);
     }
 
     public function test_user_cannot_login_with_invalid_password(): void

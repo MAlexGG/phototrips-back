@@ -41,16 +41,20 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if(!$user){
-            return response()->json(['msg' => 'No existe un usuario con ese mail, por favor regístrate']);
+            throw ValidationException::withMessages([
+                'msg' => 'No existe un usuario con ese mail, por favor regístrate',
+            ]);
         }
 
         if($user->isValidated == false){
-            return response()->json(['msg' => 'Tu usuario no está validado, contacta a tu administrador']); 
+            throw ValidationException::withMessages([
+                'msg' => 'Tu usuario no está validado, contacta con tu administrador',
+            ]);
         }
         
         if(!Hash::check($request->password, $user->password)){
             throw ValidationException::withMessages([
-                'msg' => 'Las credenciales son incorrectas.',
+                'msg' => 'Las credenciales son incorrectas',
             ]);
         }
         
